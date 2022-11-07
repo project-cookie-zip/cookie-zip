@@ -31,6 +31,6 @@ export const Layout = ({ children }: any) => {
 };
 
 const LayoutStyle = styled.div`
-    margin: 0 auto;
-    max-width:480px;
+  margin: 0 auto;
+  max-width: 480px;
 `;

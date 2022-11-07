@@ -36,7 +36,7 @@ const TopNav = styled.div`
     margin: 0 5px 0 5px;
     padding: 5px;
     &:active {
-        border-radius:15px;
+      border-radius: 15px;
       background-color: #e7e7e7;
     }
   }
