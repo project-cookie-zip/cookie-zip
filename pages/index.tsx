@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import styled from "styled-components"
+import { Layout } from '../src/components/layout/Layout'
 
 export default function Home() {
   return (
@@ -9,7 +10,7 @@ export default function Home() {
         <meta name="hello cookieZIP" content="upload your videos and watching!" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Hello>ㅎㅇ 한번 만들어보자구우</Hello>
+      <Hello>메인페이지 한번 만들어보자구우</Hello>
     </div>
   )
 }
