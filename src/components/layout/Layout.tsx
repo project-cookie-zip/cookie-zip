@@ -10,7 +10,7 @@ export const Layout = ({ children }: any) => {
   const [noLayout, setNoLayout] = useState(false);
 
   useEffect(() => {
-    pathname === "/login/login" || pathname === "/login/signup"
+    pathname === "/login" || pathname === "/sign"
       ? setNoLayout(true)
       : setNoLayout(false);
   }, [pathname]);
@@ -18,7 +18,10 @@ export const Layout = ({ children }: any) => {
   return (
     <>
       {noLayout ? (
-        <LayoutStyle>{children}</LayoutStyle>
+        <LayoutStyle>
+          {children}
+          <Footer />
+        </LayoutStyle>
       ) : (
         <LayoutStyle>
           <Header />
