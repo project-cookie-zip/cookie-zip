@@ -1,6 +1,7 @@
 import Head from "next/head";
 import styled from "styled-components";
 import { Layout } from "../src/components/layout/Layout";
+import { List } from "../src/components/list/List";
 
 export default function Home() {
   return (
@@ -13,7 +14,8 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Hello>메인페이지 한번 만들어보자구우</Hello>
+      {/* <Hello>메인페이지 한번 만들어보자구우</Hello> */}
+      <List />
     </div>
   );
 }
