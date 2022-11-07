@@ -16,12 +16,14 @@ const Container = styled.div`
   justify-content: space-around;
   align-items: center;
 
+  margin: 0 auto;
   margin-top: 120px;
   position: absolute;
   background-color: #DF9E75;
   bottom: 0;
 
-  width: 100vw;
+  max-width: 480px;
+  width:100vw;
   height: 50px;
 
 & img {
