@@ -58,7 +58,9 @@ export default function Add() {
       </ContentsWrap>
       <ButtonWrap>
         <button>업로드</button>
-        <button>취소</button>
+        <Link href={"/"}>
+          <button>취소</button>
+        </Link>
       </ButtonWrap>
     </FormContainer>
   );
