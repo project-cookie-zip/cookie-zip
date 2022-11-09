@@ -1,11 +1,16 @@
 import Image from "next/image";
 import styled from "styled-components";
+import Link from "next/link";
 
 export const Footer = () => {
   return (
     <Container>
-      <Image src={require("../../images/cookieHome.png")} alt="홈" />
-      <Image src={require("../../images/cookieUpload.png")} alt="업로드" />
+      <Link href={"/"}>
+        <Image src={require("../../images/cookieHome.png")} alt="홈" />
+      </Link>
+      <Link href={"/videos/add"}>
+        <Image src={require("../../images/cookieUpload.png")} alt="업로드" />
+      </Link>
       <Image
         src={require("../../images/cookieOthers.png")}
         alt="보관함/구독/좋아요 등"
