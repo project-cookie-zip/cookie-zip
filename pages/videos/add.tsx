@@ -56,6 +56,10 @@ export default function Add() {
         <span>내용</span>
         <input type="text" placeholder="내용을 입력해주세요" />
       </ContentsWrap>
+      <ButtonWrap>
+        <button>업로드</button>
+        <button>취소</button>
+      </ButtonWrap>
     </FormContainer>
   );
 }
@@ -145,5 +149,17 @@ const ContentsWrap = styled.div`
       outline: none;
       border-bottom: 3px solid #a9653b;
     }
+  }
+`;
+
+const ButtonWrap = styled.div`
+  & button {
+    margin: 0 10px 0 10px;
+    border: none;
+    border-radius: 5px;
+    width: 60px;
+    height: 30px;
+    background-color: #a9653b;
+    transition: 0.3s;
   }
 `;
