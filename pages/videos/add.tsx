@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
@@ -54,12 +54,14 @@ export default function Add() {
         <span>제목</span>
         <input type="text" placeholder="제목을 입력해주세요" />
         <span>내용</span>
-        <input type="text" placeholder="내용을 입력해주세요" />
+        <textarea placeholder="내용을 입력해주세요" />
       </ContentsWrap>
       <ButtonWrap>
-        <button>업로드</button>
+        <button type="button">업로드</button>
         <Link href={"/"}>
-          <button>취소</button>
+          <button className="cancel" type="button">
+            취소
+          </button>
         </Link>
       </ButtonWrap>
     </FormContainer>
@@ -152,6 +154,21 @@ const ContentsWrap = styled.div`
       border-bottom: 3px solid #a9653b;
     }
   }
+  & textarea {
+    resize: none;
+    overflow: hidden;
+    margin-bottom: 15px;
+    height: 30px;
+    font-size: 18px;
+    border: none;
+    border-bottom: 1px solid #a9653b;
+    transition: 0.2s;
+
+    &:focus {
+      outline: none;
+      border-bottom: 3px solid #a9653b;
+    }
+  }
 `;
 
 const ButtonWrap = styled.div`
@@ -163,5 +180,12 @@ const ButtonWrap = styled.div`
     height: 30px;
     background-color: #a9653b;
     transition: 0.3s;
+    &:active {
+      background-color: #df9e75;
+    }
+  }
+  & .cancel {
+    background-color: transparent;
+    border: 1px solid #a9653b;
   }
 `;
