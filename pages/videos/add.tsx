@@ -1,9 +1,11 @@
-import { useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
+import { text } from "stream/consumers";
 
 export default function Add() {
+  // 동영상 처리
   const [mediaView, setMediaView] = useState("");
 
   const uploadFile = (file: any) => {
@@ -18,6 +20,23 @@ export default function Add() {
   const deleteVideo = () => {
     setMediaView("");
   };
+
+  // title value
+  const [title, setTitle] = useState<string>("");
+  // textarea value
+  const [content, setContent] = useState<string>("");
+  // textarea 자동 줄바꿈
+  const [textareaHeight, setTextareaHeight] = useState(1);
+  console.log(content);
+  const onKeyEnter = (e: any) => {
+    if (e.key === "Enter" && content.length < 130) {
+      setContent(content + "\n");
+    }
+  };
+
+  useEffect(() => {
+    setTextareaHeight(content.split("\n").length);
+  }, [content]);
 
   return (
     <FormContainer>
@@ -42,7 +61,8 @@ export default function Add() {
           id="uploadFile"
           type="file"
           accept="video/mp4,video/mkv, video/x-m4v,video/*"
-          onChange={e => {
+          onChange={(e: any) => {
+            // React.event -- type 공부예정
             uploadFile(e.target.files[0]);
           }}
         />
@@ -52,9 +72,27 @@ export default function Add() {
       </CancelBtn>
       <ContentsWrap>
         <span>제목</span>
-        <input type="text" placeholder="제목을 입력해주세요" />
+        <input
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setTitle(e.target.value)
+          }
+          type="text"
+          placeholder="제목을 입력해주세요"
+          maxLength={20}
+        />
+        <p>{title.length}/20</p>
         <span>내용</span>
-        <textarea placeholder="내용을 입력해주세요" />
+        <textarea
+          autoComplete="off"
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            setContent(e.target.value);
+          }}
+          onKeyDown={onKeyEnter}
+          rows={textareaHeight}
+          placeholder="내용을 입력해주세요"
+          maxLength={130}
+        />
+        <p>{content.length}/130</p>
       </ContentsWrap>
       <ButtonWrap>
         <button type="button">업로드</button>
@@ -139,10 +177,9 @@ const ContentsWrap = styled.div`
   width: 90vw;
 
   & span {
-    font-size: 12px;
+    font-size: 16px;
   }
   & input {
-    margin-bottom: 15px;
     height: 45px;
     font-size: 18px;
     border: none;
@@ -156,9 +193,12 @@ const ContentsWrap = styled.div`
   }
   & textarea {
     resize: none;
+    overflow-wrap: break-word;
     overflow: hidden;
-    margin-bottom: 15px;
-    height: 30px;
+    word-break: break-all;
+    white-space: pre-wrap;
+
+    height: 125px;
     font-size: 18px;
     border: none;
     border-bottom: 1px solid #a9653b;
@@ -168,6 +208,12 @@ const ContentsWrap = styled.div`
       outline: none;
       border-bottom: 3px solid #a9653b;
     }
+  }
+  & p {
+    margin: 0;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    text-align: right;
   }
 `;
 
