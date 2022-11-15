@@ -1,21 +1,34 @@
-import Head from 'next/head'
-import styled from "styled-components"
+import Head from "next/head";
+import { useEffect } from "react";
+import styled from "styled-components";
+import { Layout } from "../src/components/layout/Layout";
+import { List } from "../src/components/list/List";
 
 export default function Home() {
+  useEffect(() => {
+    const response = fetch("/api/users/me", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(data => console.log(data));
+  }, []);
   return (
     <div>
       <Head>
         <title>CookieZIP</title>
-        <meta name="hello cookieZIP" content="upload your videos and watching!" />
+        <meta
+          name="hello cookieZIP"
+          content="upload your videos and watching!"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Hello>ㅎㅇ 한번 만들어보자구우</Hello>
+      {/* <Hello>메인페이지 한번 만들어보자구우</Hello> */}
+      <List />
     </div>
-  )
+  );
 }
 
-
-
 const Hello = styled.div`
-  color:red;
-`
+  color: red;
+`;
