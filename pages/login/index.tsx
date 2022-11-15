@@ -1,8 +1,21 @@
 import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function Login() {
+  useEffect(() => {
+    fetch("http://localhost:3000/api/users/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: "email@naver.com",
+        password: "hello11",
+      }),
+    }).then(data => console.log(data));
+  }, []);
   return (
     <div>
       <Logo>

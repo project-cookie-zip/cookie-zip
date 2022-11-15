@@ -1,15 +1,12 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider             = "mysql"
-  url                  = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model User {
@@ -24,21 +21,20 @@ model User {
   videos             Video[]
   comments           Comment[]
   likes              Like[]
-  sendSubscribes     Subscribe[] @relation(name: "sendSubscribes")
-  receivedSubscribes Subscribe[] @relation(name: "receivedSubscribes")
+  sendSubscribes     Subscribe[] @relation("sendSubscribes")
+  receivedSubscribes Subscribe[] @relation("receivedSubscribes")
 }
 
 model Token {
   id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Video {
   id           Int       @id @default(autoincrement())
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   title        String
   description  String?   @db.MediumText
   videoUrl     String
@@ -46,6 +42,7 @@ model Video {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   userId       Int
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   comments     Comment[]
   likes        Like[]
 }
@@ -55,26 +52,26 @@ model Comment {
   content   String   @db.MediumText
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
   videoId   Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
+  video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Like {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
   videoId   Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
+  video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Subscribe {
   id           Int  @id @default(autoincrement())
-  createdBy    User @relation(name: "sendSubscribes", fields: [createdById], references: [id])
-  createdFor   User @relation(name: "receivedSubscribes", fields: [createdForId], references: [id])
   createdById  Int
   createdForId Int
+  createdBy    User @relation("sendSubscribes", fields: [createdById], references: [id])
+  createdFor   User @relation("receivedSubscribes", fields: [createdForId], references: [id])
 }
