@@ -38,7 +38,6 @@ model Video {
   title        String
   description  String?   @db.MediumText
   videoUrl     String
-  thumbnailUrl String
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   userId       Int
