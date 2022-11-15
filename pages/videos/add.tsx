@@ -2,19 +2,24 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
-import { text } from "stream/consumers";
+import Swal from "sweetalert2";
 
-export default function Add() {
+export default function AddPost() {
   // 동영상 처리
   const [mediaView, setMediaView] = useState("");
+  const [mediaSend, setMediaSend] = useState<string | ArrayBuffer | null>("");
 
   const uploadFile = (file: any) => {
     const videourl = URL.createObjectURL(file);
     setMediaView(videourl);
-    // const fileReader = new FileReader();
-    // fileReader.readAsDataURL(file);
-    // fileReader.onload = () => {
-    //   const fileType = file.type.split("/")[0]
+    const reader = new FileReader();
+    for (let i = 0; i < file.length; i++) {
+      reader.readAsDataURL(file[i]);
+      reader.onloadend = () => {
+        let thisMidea = reader.result;
+        setMediaSend(thisMidea);
+      };
+    }
   };
 
   const deleteVideo = () => {
@@ -26,17 +31,41 @@ export default function Add() {
   // textarea value
   const [content, setContent] = useState<string>("");
   // textarea 자동 줄바꿈
-  const [textareaHeight, setTextareaHeight] = useState(1);
+  const [textareaHeight, setTextareaHeight] = useState<number>(1);
   console.log(content);
   const onKeyEnter = (e: any) => {
     if (e.key === "Enter" && content.length < 130) {
       setContent(content + "\n");
     }
   };
-
   useEffect(() => {
     setTextareaHeight(content.split("\n").length);
   }, [content]);
+
+  interface sendData {
+    title: string;
+    content: string;
+    video: string | ArrayBuffer | null;
+  }
+  let sendData = {
+    title: title,
+    content: content,
+    video: mediaSend,
+  };
+  const addVideo = () => {
+    if (title === "" || content === "" || mediaSend === "") {
+      Swal.fire({
+        title: "글을 확인해주세요ㅠㅠ",
+        icon: "warning",
+        confirmButtonColor: "#A9653B",
+        confirmButtonText: "네, 알겠어요",
+      }).then(result => {
+        if (result.value) {
+        }
+      });
+    } else {
+    }
+  };
 
   return (
     <FormContainer>
@@ -94,8 +123,22 @@ export default function Add() {
         />
         <p>{content.length}/130</p>
       </ContentsWrap>
+      <select name="category" id="category">
+        <option value="1">게임</option>
+        <option value="2">음악</option>
+        <option value="3">요리</option>
+        <option value="4">쇼핑</option>
+        <option value="5">스포츠</option>
+        <option value="6">동물</option>
+        <option value="7">연예</option>
+        <option value="8">뷰티</option>
+        <option value="9">영화</option>
+        <option value="10">먹방</option>
+      </select>
       <ButtonWrap>
-        <button type="button">업로드</button>
+        <button onClick={addVideo} type="button">
+          업로드
+        </button>
         <Link href={"/"}>
           <button className="cancel" type="button">
             취소
@@ -112,6 +155,7 @@ const FormContainer = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 480px;
 
   animation: addPostFadein 0.8s;
   @keyframes addPostFadein {
