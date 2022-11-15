@@ -25,7 +25,7 @@ export default function withHandler({
       return res.status(405).end();
     }
     if (isPrivate && !req.session.user) {
-      return res.json({ ok: false, error: "Plz log in" });
+      return res.status(404).json({ ok: false, error: "Plz log in" });
     }
     try {
       await handler(req, res);

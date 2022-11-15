@@ -1,9 +1,18 @@
 import Head from "next/head";
+import { useEffect } from "react";
 import styled from "styled-components";
 import { Layout } from "../src/components/layout/Layout";
 import { List } from "../src/components/list/List";
 
 export default function Home() {
+  useEffect(() => {
+    const response = fetch("/api/users/me", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(data => console.log(data));
+  }, []);
   return (
     <div>
       <Head>
