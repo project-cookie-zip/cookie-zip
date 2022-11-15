@@ -1,28 +1,27 @@
 import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
-
+import { useForm, SubmitHandler } from "react-hook-form";
+interface ILoginInputs {
+  email: string;
+  password: string;
+}
 export default function Login() {
-  // useForm(() => {
-  //   fetch("http://localhost:3000/api/users/login", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       email: "email@naver.com",
-  //       password: "hello11",
-  //     }),
-  //   }).then(data => console.log(data));
-  // }, []);
   const {
     register, // 등록
     handleSubmit, // 제출
     watch, // 현재 상태 볼 수있음
     formState: { errors },
   } = useForm();
-  const onSubmit = data => console.log(data);
+  const onSubmit: SubmitHandler<ILoginInputs> = async data => {
+    const response = await fetch("/api/users/login", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
 
   return (
     <div>
@@ -33,12 +32,12 @@ export default function Login() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Div>
           <Text>이메일</Text>
-          <Input {...register("이메일")} />
+          <Input {...register("email")} />
         </Div>
 
         <Div>
           <Text>비밀번호</Text>
-          <Input {...register("비밀번호")} />
+          <Input type="password" {...register("password")} />
         </Div>
 
         <ButtonDiv>

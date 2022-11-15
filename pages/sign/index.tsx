@@ -2,10 +2,11 @@ import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useState } from "react";
 interface IFormInputs {
   email: string;
   nickname: string;
-  password1: string;
+  password: string;
   password2: string;
 }
 export default function SignUp() {
@@ -16,8 +17,29 @@ export default function SignUp() {
     formState: { errors },
   } = useForm<IFormInputs>();
   console.log(errors);
-  const onSubmit: SubmitHandler<IFormInputs> = data => console.log(data);
+  const onSubmit: SubmitHandler<IFormInputs> = async data => {
+    const response = await fetch("/api/users/enter", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
 
+  //password type 변경용 state
+  const [passwordType, setPasswordType] = useState({
+    type: "password",
+    visible: false,
+  });
+  const handlePasswordType = e => {
+    setPasswordType(() => {
+      if (!passwordType.visible) {
+        return { type: "text", visible: true };
+      }
+      return { type: "password", visible: false };
+    });
+  };
   return (
     <div>
       <Logo>
@@ -38,11 +60,14 @@ export default function SignUp() {
         </Div>
         <Div>
           <Text>비밀번호</Text>
-          <Input {...register("password1")} />
+          <Input type={passwordType.type} {...register("password")} />
         </Div>
         <Div>
           <Text>비밀번호(확인)</Text>
-          <Input {...register("password2")} />
+          <Input type={passwordType.type} {...register("password2")} />
+          <span onClick={handlePasswordType}>
+            {passwordType.visible ? <span>숨기기</span> : <span>보이기</span>}
+          </span>
         </Div>
         <ButtonDiv>
           <Button>
