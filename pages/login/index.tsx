@@ -1,51 +1,57 @@
 import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 
 export default function Login() {
-  useEffect(() => {
-    fetch("http://localhost:3000/api/users/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: "email@naver.com",
-        password: "hello11",
-      }),
-    }).then(data => console.log(data));
-  }, []);
+  // useForm(() => {
+  //   fetch("http://localhost:3000/api/users/login", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       email: "email@naver.com",
+  //       password: "hello11",
+  //     }),
+  //   }).then(data => console.log(data));
+  // }, []);
+  const {
+    register, // 등록
+    handleSubmit, // 제출
+    watch, // 현재 상태 볼 수있음
+    formState: { errors },
+  } = useForm();
+  const onSubmit = data => console.log(data);
+
   return (
     <div>
       <Logo>
         <Image src={require("../../src/images/thumbnail.png")} alt="알림" />
       </Logo>
       <Hr />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Div>
+          <Text>이메일</Text>
+          <Input {...register("이메일")} />
+        </Div>
 
-      <Div>
-        <Text>이메일</Text>
-        <Input placeholder="이메일을 입력하세요" />
-      </Div>
+        <Div>
+          <Text>비밀번호</Text>
+          <Input {...register("비밀번호")} />
+        </Div>
 
-      <Div>
-        <Text>비밀번호</Text>
-        <Input placeholder="비밀번호를 입력하세요" />
-      </Div>
+        <ButtonDiv>
+          <Button type="submit" />
 
-      <ButtonDiv>
-        <Button>
-          <Link href="/login">
-            <ButtonText>로그인</ButtonText>
+          <Link href="/sign">
+            {" "}
+            <SignButton>
+              <ButtonText className="text">회원가입</ButtonText>
+            </SignButton>
           </Link>
-        </Button>
-        <Link href="/sign">
-          {" "}
-          <SignButton>
-            <ButtonText className="text">회원가입</ButtonText>
-          </SignButton>
-        </Link>
-      </ButtonDiv>
+        </ButtonDiv>
+      </form>
     </div>
   );
 }
@@ -91,7 +97,7 @@ const ButtonDiv = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-const Button = styled.button`
+const Button = styled.input`
   & a {
     text-decoration: none;
   }

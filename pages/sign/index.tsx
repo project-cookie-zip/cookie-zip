@@ -1,41 +1,59 @@
 import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
-
+import { useForm, SubmitHandler } from "react-hook-form";
+interface IFormInputs {
+  email: string;
+  nickname: string;
+  password1: string;
+  password2: string;
+}
 export default function SignUp() {
+  const {
+    register, // 등록
+    handleSubmit, // 제출
+    watch, // 현재 상태 볼 수있음
+    formState: { errors },
+  } = useForm<IFormInputs>();
+  console.log(errors);
+  const onSubmit: SubmitHandler<IFormInputs> = data => console.log(data);
+
   return (
     <div>
       <Logo>
         <Image src={require("../../src/images/thumbnail.png")} alt="알림" />
       </Logo>
       <Hr />
-
-      <Div>
-        <Text>이메일</Text>
-        <Input placeholder="이메일을 입력하세요" />
-      </Div>
-      <Div>
-        <Text>닉네임</Text>
-        <Input placeholder="닉네임을 입력하세요" />
-      </Div>
-      <Div>
-        <Text>비밀번호</Text>
-        <Input placeholder="비밀번호를 입력하세요" />
-      </Div>
-      <Div>
-        <Text>비밀번호(확인)</Text>
-        <Input placeholder="비밀번호를 입력하세요" />
-      </Div>
-      <ButtonDiv>
-        <Button>
-          <Link href="/login">
-            <ButtonText>뒤로가기</ButtonText>
-          </Link>
-        </Button>
-        <Button className="sign">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Div>
+          <Text>이메일</Text>
+          <Input
+            {...register("email", { required: "이메일을 작성해 주세요" })}
+          />
+          <span>{errors?.email?.message}</span>
+        </Div>
+        <Div>
+          <Text>닉네임</Text>
+          <Input {...register("nickname")} />
+        </Div>
+        <Div>
+          <Text>비밀번호</Text>
+          <Input {...register("password1")} />
+        </Div>
+        <Div>
+          <Text>비밀번호(확인)</Text>
+          <Input {...register("password2")} />
+        </Div>
+        <ButtonDiv>
+          <Button>
+            <Link href="/login">
+              <ButtonText>뒤로가기</ButtonText>
+            </Link>
+          </Button>
+          <input type="submit" className="sign" />
           <ButtonText>가입하기</ButtonText>
-        </Button>
-      </ButtonDiv>
+        </ButtonDiv>
+      </form>
     </div>
   );
 }
