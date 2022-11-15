@@ -1,11 +1,14 @@
 import Image from "next/image";
 import styled from "styled-components";
+import Link from "next/link";
 
 export const Header = () => {
   return (
     <Container>
       <Logo>
-        <Image src={require("../../images/cookieLogo.png")} alt="logo" />
+        <Link href={"/"}>
+          <Image src={require("../../images/cookieLogo.png")} alt="logo" />
+        </Link>
       </Logo>
       <TopNav>
         <Image src={require("../../images/cookieAlert.png")} alt="알림" />

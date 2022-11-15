@@ -1,38 +1,56 @@
 import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
-
+import { useForm, SubmitHandler } from "react-hook-form";
+interface ILoginInputs {
+  email: string;
+  password: string;
+}
 export default function Login() {
+  const {
+    register, // 등록
+    handleSubmit, // 제출
+    watch, // 현재 상태 볼 수있음
+    formState: { errors },
+  } = useForm();
+  const onSubmit: SubmitHandler<ILoginInputs> = async data => {
+    const response = await fetch("/api/users/login", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
+
   return (
     <div>
       <Logo>
         <Image src={require("../../src/images/thumbnail.png")} alt="알림" />
       </Logo>
       <Hr />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Div>
+          <Text>이메일</Text>
+          <Input {...register("email")} />
+        </Div>
 
-      <Div>
-        <Text>이메일</Text>
-        <Input placeholder="이메일을 입력하세요" />
-      </Div>
+        <Div>
+          <Text>비밀번호</Text>
+          <Input type="password" {...register("password")} />
+        </Div>
 
-      <Div>
-        <Text>비밀번호</Text>
-        <Input placeholder="비밀번호를 입력하세요" />
-      </Div>
+        <ButtonDiv>
+          <Button type="submit" />
 
-      <ButtonDiv>
-        <Button>
-          <Link href="/login">
-            <ButtonText>로그인</ButtonText>
+          <Link href="/sign">
+            {" "}
+            <SignButton>
+              <ButtonText className="text">회원가입</ButtonText>
+            </SignButton>
           </Link>
-        </Button>
-        <Link href="/sign">
-          {" "}
-          <SignButton>
-            <ButtonText className="text">회원가입</ButtonText>
-          </SignButton>
-        </Link>
-      </ButtonDiv>
+        </ButtonDiv>
+      </form>
     </div>
   );
 }
@@ -78,7 +96,7 @@ const ButtonDiv = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-const Button = styled.button`
+const Button = styled.input`
   & a {
     text-decoration: none;
   }

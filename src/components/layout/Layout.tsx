@@ -1,13 +1,14 @@
 import styled from "styled-components";
-import { Header } from "./Header";
-import { Footer } from "./Footer";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import { Header } from "./Header";
+import { Footer } from "./Footer";
+import Category from "./Category";
 
 export const Layout = ({ children }: any) => {
   const { pathname } = useRouter();
 
-  const [noLayout, setNoLayout] = useState(false);
+  const [noLayout, setNoLayout] = useState<boolean>(false);
 
   useEffect(() => {
     pathname === "/login" || pathname === "/sign"
@@ -25,6 +26,7 @@ export const Layout = ({ children }: any) => {
       ) : (
         <LayoutStyle>
           <Header />
+          <Category />
           {children}
           <Footer />
         </LayoutStyle>

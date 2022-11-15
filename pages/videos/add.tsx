@@ -1,22 +1,70 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
+import Swal from "sweetalert2";
 
-export default function Add() {
+export default function AddPost() {
+  // 동영상 처리
   const [mediaView, setMediaView] = useState("");
+  const [mediaSend, setMediaSend] = useState<string | ArrayBuffer | null>("");
 
   const uploadFile = (file: any) => {
     const videourl = URL.createObjectURL(file);
     setMediaView(videourl);
-    // const fileReader = new FileReader();
-    // fileReader.readAsDataURL(file);
-    // fileReader.onload = () => {
-    //   const fileType = file.type.split("/")[0]
+    const reader = new FileReader();
+    for (let i = 0; i < file.length; i++) {
+      reader.readAsDataURL(file[i]);
+      reader.onloadend = () => {
+        let thisMidea = reader.result;
+        setMediaSend(thisMidea);
+      };
+    }
   };
 
   const deleteVideo = () => {
     setMediaView("");
+  };
+
+  // title value
+  const [title, setTitle] = useState<string>("");
+  // textarea value
+  const [content, setContent] = useState<string>("");
+  // textarea 자동 줄바꿈
+  const [textareaHeight, setTextareaHeight] = useState<number>(1);
+  console.log(content);
+  const onKeyEnter = (e: any) => {
+    if (e.key === "Enter" && content.length < 130) {
+      setContent(content + "\n");
+    }
+  };
+  useEffect(() => {
+    setTextareaHeight(content.split("\n").length);
+  }, [content]);
+
+  interface sendData {
+    title: string;
+    content: string;
+    video: string | ArrayBuffer | null;
+  }
+  let sendData = {
+    title: title,
+    content: content,
+    video: mediaSend,
+  };
+  const addVideo = () => {
+    if (title === "" || content === "" || mediaSend === "") {
+      Swal.fire({
+        title: "글을 확인해주세요ㅠㅠ",
+        icon: "warning",
+        confirmButtonColor: "#A9653B",
+        confirmButtonText: "네, 알겠어요",
+      }).then(result => {
+        if (result.value) {
+        }
+      });
+    } else {
+    }
   };
 
   return (
@@ -42,7 +90,8 @@ export default function Add() {
           id="uploadFile"
           type="file"
           accept="video/mp4,video/mkv, video/x-m4v,video/*"
-          onChange={e => {
+          onChange={(e: any) => {
+            // React.event -- type 공부예정
             uploadFile(e.target.files[0]);
           }}
         />
@@ -52,10 +101,50 @@ export default function Add() {
       </CancelBtn>
       <ContentsWrap>
         <span>제목</span>
-        <input type="text" placeholder="제목을 입력해주세요" />
+        <input
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setTitle(e.target.value)
+          }
+          type="text"
+          placeholder="제목을 입력해주세요"
+          maxLength={20}
+        />
+        <p>{title.length}/20</p>
         <span>내용</span>
-        <input type="text" placeholder="내용을 입력해주세요" />
+        <textarea
+          autoComplete="off"
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            setContent(e.target.value);
+          }}
+          onKeyDown={onKeyEnter}
+          rows={textareaHeight}
+          placeholder="내용을 입력해주세요"
+          maxLength={130}
+        />
+        <p>{content.length}/130</p>
       </ContentsWrap>
+      <select name="category" id="category">
+        <option value="1">게임</option>
+        <option value="2">음악</option>
+        <option value="3">요리</option>
+        <option value="4">쇼핑</option>
+        <option value="5">스포츠</option>
+        <option value="6">동물</option>
+        <option value="7">연예</option>
+        <option value="8">뷰티</option>
+        <option value="9">영화</option>
+        <option value="10">먹방</option>
+      </select>
+      <ButtonWrap>
+        <button onClick={addVideo} type="button">
+          업로드
+        </button>
+        <Link href={"/"}>
+          <button className="cancel" type="button">
+            취소
+          </button>
+        </Link>
+      </ButtonWrap>
     </FormContainer>
   );
 }
@@ -66,6 +155,7 @@ const FormContainer = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 480px;
 
   animation: addPostFadein 0.8s;
   @keyframes addPostFadein {
@@ -131,10 +221,9 @@ const ContentsWrap = styled.div`
   width: 90vw;
 
   & span {
-    font-size: 12px;
+    font-size: 16px;
   }
   & input {
-    margin-bottom: 15px;
     height: 45px;
     font-size: 18px;
     border: none;
@@ -145,5 +234,48 @@ const ContentsWrap = styled.div`
       outline: none;
       border-bottom: 3px solid #a9653b;
     }
+  }
+  & textarea {
+    resize: none;
+    overflow-wrap: break-word;
+    overflow: hidden;
+    word-break: break-all;
+    white-space: pre-wrap;
+
+    height: 125px;
+    font-size: 18px;
+    border: none;
+    border-bottom: 1px solid #a9653b;
+    transition: 0.2s;
+
+    &:focus {
+      outline: none;
+      border-bottom: 3px solid #a9653b;
+    }
+  }
+  & p {
+    margin: 0;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    text-align: right;
+  }
+`;
+
+const ButtonWrap = styled.div`
+  & button {
+    margin: 0 10px 0 10px;
+    border: none;
+    border-radius: 5px;
+    width: 60px;
+    height: 30px;
+    background-color: #a9653b;
+    transition: 0.3s;
+    &:active {
+      background-color: #df9e75;
+    }
+  }
+  & .cancel {
+    background-color: transparent;
+    border: 1px solid #a9653b;
   }
 `;

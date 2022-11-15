@@ -1,0 +1,76 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  id                 Int         @id @default(autoincrement())
+  email              String      @unique
+  name               String
+  password           String
+  avatar             String?
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  token              Token[]
+  videos             Video[]
+  comments           Comment[]
+  likes              Like[]
+  sendSubscribes     Subscribe[] @relation("sendSubscribes")
+  receivedSubscribes Subscribe[] @relation("receivedSubscribes")
+}
+
+model Token {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Video {
+  id           Int       @id @default(autoincrement())
+  title        String
+  description  String?   @db.MediumText
+  videoUrl     String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  userId       Int
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments     Comment[]
+  likes        Like[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String   @db.MediumText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  videoId   Int
+  userId    Int
+  video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  videoId   Int
+  userId    Int
+  video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Subscribe {
+  id           Int  @id @default(autoincrement())
+  createdById  Int
+  createdForId Int
+  createdBy    User @relation("sendSubscribes", fields: [createdById], references: [id])
+  createdFor   User @relation("receivedSubscribes", fields: [createdForId], references: [id])
+}
