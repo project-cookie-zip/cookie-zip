@@ -42,6 +42,7 @@ export default function AddPost() {
     setTextareaHeight(content.split("\n").length);
   }, [content]);
 
+  // form data //
   interface sendData {
     title: string;
     content: string;
@@ -52,6 +53,7 @@ export default function AddPost() {
     content: content,
     video: mediaSend,
   };
+
   const addVideo = () => {
     if (title === "" || content === "" || mediaSend === "") {
       Swal.fire({
