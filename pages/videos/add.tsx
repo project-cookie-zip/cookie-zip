@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
 import Swal from "sweetalert2";
+import axios from "axios";
 
 export default function AddPost() {
   // 동영상 처리

@@ -30,3 +30,5 @@ export default function DetailPost() {
     </div>
   );
 }
+
+const container = styled.div``;
