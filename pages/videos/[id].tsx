@@ -32,3 +32,5 @@ export default function DetailPost() {
 }
 
 const container = styled.div``;
+
+const subcom = styled.div``;
