@@ -7,37 +7,66 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>,
 ) {
-  const {
-    query: { id },
-    session: { user },
-    body: { content },
-  } = req;
+  if (req.method === "POST") {
+    const {
+      query: { id },
+      session: { user },
+      body: { content },
+    } = req;
+    const newAnswer = await client.comment.create({
+      data: {
+        user: {
+          connect: {
+            id: Number(user?.id),
+          },
+        },
+        video: {
+          connect: {
+            id: Number(id),
+          },
+        },
+        content,
+      },
+    });
+    res.json({
+      ok: true,
+      answer: newAnswer,
+    });
+  }
 
-  const newAnswer = await client.comment.create({
-    data: {
-      user: {
-        connect: {
-          id: user?.id,
-        },
+  if (req.method === "DELETE") {
+    const {
+      session: { user },
+      body: { commentId },
+    } = req;
+    const targetComment = await client.comment.findUnique({
+      where: {
+        id: commentId,
       },
-      video: {
-        connect: {
-          id: Number(id),
+    });
+
+    if (targetComment?.userId === user?.id) {
+      await client.comment.delete({
+        where: {
+          id: Number(commentId),
         },
-      },
-      content,
-    },
-  });
-  console.log(newAnswer);
-  res.json({
-    ok: true,
-    answer: newAnswer,
-  });
+      });
+      res.json({
+        ok: true,
+      });
+    } else {
+      res.status(403).json({
+        ok: false,
+        error: "CommendId / UserId Incorrespond",
+      });
+    }
+  }
 }
 
 export default withApiSession(
   withHandler({
-    methods: ["POST"],
+    methods: ["POST", "DELETE"],
     handler,
+    isPrivate: false,
   }),
 );
