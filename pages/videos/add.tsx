@@ -102,7 +102,21 @@ export default function AddPost() {
       } = await axios.get("/api/video");
       console.log(data);
       console.log(uploadURL);
-      axios.post(uploadURL, formData).then(res => console.log(res));
+      await axios.post(uploadURL, formData).then(res => console.log(res));
+
+      const response = await (
+        await fetch(
+          `https://api.cloudflare.com/client/v4/accounts/${process.env.REACT_CLOUDFLARE_CLIENT_ID}/stream?search=harri`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${process.env.REACT_CLOUDFLARE_API_TOKEN}`,
+              "Content-Type": "application/json",
+            },
+          },
+        )
+      ).json();
+      console.log(response);
     }
   };
 
