@@ -9,8 +9,11 @@ export default function AddPost() {
   // 동영상 처리
   const [mediaView, setMediaView] = useState("");
   const [mediaSend, setMediaSend] = useState<string | any>("");
+  const [testSend, setTestSend] = useState("");
 
   const uploadFile = (file: any) => {
+    console.log(file);
+    setTestSend(file);
     let maxSize = 200 * 1024 * 1024;
     let fileSize = file.size;
     if (fileSize > maxSize) {
@@ -91,7 +94,7 @@ export default function AddPost() {
       });
     } else {
       let formData = new FormData();
-      formData.append("file", mediaSend);
+      formData.append("file", testSend);
       // formData.append("multipart/form-data", new BloB([JOSN.stringify(sendData)]));
       const {
         data,
@@ -99,13 +102,12 @@ export default function AddPost() {
       } = await axios.get("/api/video");
       console.log(data);
       console.log(uploadURL);
-      axios.post(uploadURL, formData);
+      axios.post(uploadURL, formData).then(res => console.log(res));
     }
   };
-  console.log(title);
-  console.log(content);
-  console.log(category);
-  console.log(mediaSend);
+
+  console.log("send", mediaSend);
+  console.log("view", mediaView);
 
   return (
     <FormContainer>
