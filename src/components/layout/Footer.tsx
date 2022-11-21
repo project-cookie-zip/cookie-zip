@@ -37,6 +37,7 @@ const Container = styled.div`
   max-width: 480px;
   width: 100vw;
   height: 50px;
+  z-index: 11;
 
   & img {
     width: 40px;
