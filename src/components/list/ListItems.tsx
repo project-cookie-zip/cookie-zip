@@ -26,7 +26,7 @@ const STContainer = styled.div`
   border: 1px solid #754423;
   display: flex;
   flex-direction: column;
-  width: 480px;
+  width: 460px;
   height: 310px;
   margin: 0 auto;
   margin-bottom: 40px;
@@ -35,7 +35,7 @@ const STContainer = styled.div`
 const STVideoBox = styled.div`
   border-bottom: 1px solid #754423;
   height: 240px;
-  width: 480px;
+  width: 100%;
 `;
 
 const STImage = styled.img`
@@ -64,6 +64,7 @@ const STChannelName = styled.div`
   height: 50px;
   margin: 0 10px;
 `;
+
 const STContent = styled.div`
   display: flex;
   flex-direction: column;

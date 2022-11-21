@@ -1,17 +1,26 @@
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 import styled from "styled-components";
 import { Layout } from "../src/components/layout/Layout";
 import { List } from "../src/components/list/List";
 
 export default function Home() {
+  const router = useRouter();
   useEffect(() => {
     const response = fetch("/api/users/me", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-    }).then(data => console.log(data));
+    }).then(data => {
+      if (data.status === 404) {
+        console.log(data);
+        router.replace("/login");
+      } else {
+        console.log(data);
+      }
+    });
   }, []);
   return (
     <div>

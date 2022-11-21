@@ -1,32 +1,168 @@
 import styled from "styled-components";
 import Image from "next/image";
+import Link from "next/link";
+import { Accordion } from "src/components/videos/video/Accordion";
 
 export default function DetailPost() {
+  const baseImage: string = `https://source.boringavatars.com/beam/110/$1?colors=DF9E75,A9653B,412513,412510,412500`;
+
+  // subscribe
+  const toSubscribe = () => {
+    console.log("구독");
+  };
+
+  // likes
+  const likeUp = () => {
+    console.log("좋아용");
+  };
+  const likeDown = () => {
+    console.log("싫어용");
+  };
+
   return (
-    <div>
-      <div>
-        <video src=""></video>
-      </div>
-      <div>
-        <div>제목</div>
-        <div>
-          <div>조회수 00회</div>
-          <div>1일 전</div>
-        </div>
-      </div>
-      <div>
-        <div>
-          <Image src="" alt="프로필사진" />
-          <div>작성자명</div>
-          <div>구독자수(0만)</div>
-          <button>구독</button>
-        </div>
-      </div>
-      <div>내용 - 클릭 시 내용 노출</div>
-      <div>
-        <button>좋아요</button>
-        <button>싫어요</button>
-      </div>
-    </div>
+    <Container>
+      <VideoWrap>
+        <VideoView
+          src="https://embed.cloudflarestream.com/embed/iframe-player.4eff9464.js"
+          controls
+        />
+      </VideoWrap>
+      <ContentHeader>
+        <Title>제목</Title>
+        <SideInfo>
+          <span>조회수00회</span>
+          <span>1일 전</span>
+        </SideInfo>
+      </ContentHeader>
+      <UserInfo>
+        <UsersData>
+          <Link href={"/"}>
+            <Image
+              src={baseImage}
+              alt="프로필사진"
+              width={60}
+              height={60}
+              unoptimized={true}
+            />
+          </Link>
+          <span>UserID에옹</span>
+          <span>구독자수(10만)</span>
+        </UsersData>
+        <SubscribeBtn onClick={() => toSubscribe()}>구독</SubscribeBtn>
+      </UserInfo>
+      <SideBtnsWrap>
+        <LikesBtns>
+          <button onClick={() => likeUp()}>
+            <Image src={require("../../src/images/cookieLike.png")} alt="" />
+          </button>
+          <button onClick={() => likeDown()}>
+            <Image src={require("../../src/images/cookieUnLike.png")} alt="" />
+          </button>
+        </LikesBtns>
+      </SideBtnsWrap>
+      <Accordion baseImage={baseImage} />
+    </Container>
   );
 }
+
+const Container = styled.div`
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100vw;
+
+  animation: addPostFadein 0.3s;
+  @keyframes addPostFadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`;
+
+const VideoWrap = styled.div`
+  width: 100vw;
+  height: 300px;
+`;
+
+const VideoView = styled.video`
+  width: 100vw;
+  height: 300px;
+`;
+
+const ContentHeader = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const Title = styled.div`
+  padding: 7px;
+  font-size: 20px;
+  font-weight: bold;
+`;
+
+const SideInfo = styled.div`
+  margin-top: 5px;
+  display: flex;
+
+  & span {
+    margin: 0 5px 0 5px;
+    color: #929292;
+  }
+`;
+
+const UserInfo = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const UsersData = styled.div`
+  padding: 10px;
+  display: flex;
+  align-items: center;
+
+  & span {
+    margin: 0 5px 0 5px;
+    color: #929292;
+  }
+`;
+
+const SubscribeBtn = styled.button`
+  padding: 5px;
+  margin-right: 20px;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  width: 60px;
+  height: 40px;
+  background-color: #df9e75;
+`;
+const subscribeCancle = styled.button`
+  padding: 5px;
+  margin-right: 20px;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  width: 60px;
+  height: 40px;
+  background-color: #df9e75;
+`;
+
+const SideBtnsWrap = styled.div`
+  display: flex;
+  width: 100vw;
+`;
+
+const LikesBtns = styled.div`
+  padding: 10px;
+`;
