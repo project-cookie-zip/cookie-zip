@@ -11,6 +11,7 @@ export default function DetailPost() {
   const [videoTest, setVideoTest] = useState("");
   const getVideo = async () => {
     const { data } = await axios.get(`/api/videos/${1}`);
+    console.log(data);
     console.log(data.video.videoUrl);
     setVideoTest(data?.video.videoUrl);
   };
@@ -38,7 +39,8 @@ export default function DetailPost() {
         <VideoView
           // src="https://embed.cloudflarestream.com/embed/iframe-player.4eff9464.js"
           src={videoTest}
-          controls
+          allow="fullscreen"
+          // controls
         />
       </VideoWrap>
       <ContentHeader>
@@ -111,7 +113,11 @@ const VideoWrap = styled.div`
   height: 300px;
 `;
 
-const VideoView = styled.video`
+// const VideoView = styled.video`
+//   width: 100vw;
+//   height: 300px;
+// `;
+const VideoView = styled.iframe`
   width: 100vw;
   height: 300px;
 `;
