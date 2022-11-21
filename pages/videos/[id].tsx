@@ -51,12 +51,21 @@ export default function DetailPost() {
         <SubscribeBtn onClick={() => toSubscribe()}>구독</SubscribeBtn>
       </UserInfo>
       <SideBtnsWrap>
+        {/* 싫어요 없애고 좋아요만 남길까 생각중 */}
         <LikesBtns>
           <button onClick={() => likeUp()}>
-            <Image src={require("../../src/images/cookieLike.png")} alt="" />
+            <Image
+              src={require("../../src/images/cookieLike.png")}
+              alt=""
+              width={40}
+            />
           </button>
           <button onClick={() => likeDown()}>
-            <Image src={require("../../src/images/cookieUnLike.png")} alt="" />
+            <Image
+              src={require("../../src/images/cookieUnLike.png")}
+              alt=""
+              width={40}
+            />
           </button>
         </LikesBtns>
       </SideBtnsWrap>
@@ -165,4 +174,16 @@ const SideBtnsWrap = styled.div`
 
 const LikesBtns = styled.div`
   padding: 10px;
+
+  & button {
+    border: none;
+    background: none;
+    border-radius: 15px;
+    /* width: 40px;
+    height: 40px; */
+
+    &:active {
+      background-color: #ececec;
+    }
+  }
 `;
