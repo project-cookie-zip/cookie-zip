@@ -95,7 +95,6 @@ export default function AddPost() {
     } else {
       let formData = new FormData();
       formData.append("file", testSend);
-      // formData.append("multipart/form-data", new BloB([JOSN.stringify(sendData)]));
       const {
         data: { uploadURL, uid },
       } = await axios.get("/api/video");
