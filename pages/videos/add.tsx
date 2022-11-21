@@ -97,31 +97,34 @@ export default function AddPost() {
       formData.append("file", testSend);
       // formData.append("multipart/form-data", new BloB([JOSN.stringify(sendData)]));
       const {
-        data,
-        data: { uploadURL },
+        data: { uploadURL, uid },
       } = await axios.get("/api/video");
-      console.log(data);
-      console.log(uploadURL);
+      console.log(uploadURL, uid);
       await axios.post(uploadURL, formData).then(res => console.log(res));
 
-      const response = await (
+      const {
+        result: { thumbnail, preview },
+      } = await (
         await fetch(
-          `https://api.cloudflare.com/client/v4/accounts/${process.env.REACT_CLOUDFLARE_CLIENT_ID}/stream?search=harri`,
+          `https://api.cloudflare.com/client/v4/accounts/e564ea5cae1cb0fb8004a589abe35f63/stream/${uid}`,
           {
             method: "GET",
             headers: {
-              Authorization: `Bearer ${process.env.REACT_CLOUDFLARE_API_TOKEN}`,
+              Authorization: `Bearer 2PptoKx0NQLjSOoPxLgePH2I6GztAIx1p-hKv6Z0`,
               "Content-Type": "application/json",
             },
           },
         )
       ).json();
-      console.log(response);
+
+      await axios.post("/api/videos", {
+        title,
+        description: content,
+        videoUrl: preview,
+        thumbnailUrl: thumbnail,
+      });
     }
   };
-
-  console.log("send", mediaSend);
-  console.log("view", mediaView);
 
   return (
     <FormContainer>
