@@ -2,9 +2,22 @@ import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
 import { Accordion } from "src/components/videos/video/Accordion";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function DetailPost() {
   const baseImage: string = `https://source.boringavatars.com/beam/110/$1?colors=DF9E75,A9653B,412513,412510,412500`;
+
+  const [videoTest, setVideoTest] = useState("");
+  const getVideo = async () => {
+    const { data } = await axios.get(`/api/videos/${1}`);
+    console.log(data.video.videoUrl);
+    setVideoTest(data?.video.videoUrl);
+  };
+
+  useEffect(() => {
+    getVideo();
+  }, []);
 
   // subscribe
   const toSubscribe = () => {
@@ -23,7 +36,8 @@ export default function DetailPost() {
     <Container>
       <VideoWrap>
         <VideoView
-          src="https://embed.cloudflarestream.com/embed/iframe-player.4eff9464.js"
+          // src="https://embed.cloudflarestream.com/embed/iframe-player.4eff9464.js"
+          src={videoTest}
           controls
         />
       </VideoWrap>
