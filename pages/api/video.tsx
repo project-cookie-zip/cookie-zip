@@ -14,7 +14,8 @@ async function handler(
 ) {
   const maxDurationSeconds = 3600;
   const thumbnailTimestampPct = 0.529241;
-  const data = { maxDurationSeconds, thumbnailTimestampPct };
+  const allowedOrigins = ["localhost:3000"];
+  const data = { maxDurationSeconds, thumbnailTimestampPct, allowedOrigins };
   const body = JSON.stringify(data);
   const response = await (
     await fetch(
