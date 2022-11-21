@@ -68,13 +68,13 @@ export default function AddPost() {
   interface sendData {
     title: string;
     content: string;
-    // category: string;
+    category: string;
     // video: string | ArrayBuffer | null | Blob;
   }
   let sendData = {
     title: title,
     content: content,
-    // category: category,
+    category: category,
     // video: mediaSend,
   };
 
@@ -203,7 +203,7 @@ export default function AddPost() {
 
 const FormContainer = styled.form`
   margin: 0 auto;
-  margin-top: 50px;
+  /* margin-top: 50px; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -267,7 +267,7 @@ const CancelBtn = styled.button`
 `;
 
 const ContentsWrap = styled.div`
-  margin-top: 30px;
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
   width: 90vw;
