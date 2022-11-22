@@ -1,5 +1,9 @@
 import styled from "styled-components";
 import Image from "next/image";
+import { QueryClient, useMutation } from "react-query";
+import axios from "axios";
+import { useRef, useState } from "react";
+import { useRouter } from "next/router";
 
 export const CommentModal = ({
   showModal,
@@ -9,7 +13,53 @@ export const CommentModal = ({
   closeModal: any;
 }) => {
   const baseImage = `https://source.boringavatars.com/beam/110/$1?colors=DF9E75,A9653B,412513,412510,412500`;
+  const {
+    query: { id },
+  } = useRouter();
+  console.log(id);
+  const [content, setContent] = useState("");
+  const onChangeContentHandler = e => {
+    setContent(e.target.value);
+  };
+  const queryClient = new QueryClient();
+  const api = axios.create({
+    baseURL: "http://localhost:3000/",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
+  const addWrite = async (req: any) => {
+    const response = await api.post(`/api/comments?id=${id}`, req);
+    return response;
+  };
+
+  const mutation = useMutation(req => addWrite(req), {
+    onError: error => console.log(error),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["content"]);
+    },
+  });
+
+  const onClick = () => {
+    setContent("");
+
+    mutation.mutate(
+      { content },
+      {
+        onSuccess: () => {
+          setTimeout(() => {
+            window.scrollTo({
+              top: document.body.scrollHeight,
+              left: 100,
+              behavior: "smooth",
+            });
+          }, 500);
+        },
+        onError: () => {},
+      },
+    );
+  };
   return (
     <StyledModalBackground
       onClick={closeModal}
@@ -24,9 +74,13 @@ export const CommentModal = ({
             height={60}
             unoptimized={true}
           />
-          <textarea placeholder="댓글추가 ..." />
+          <textarea
+            onChange={onChangeContentHandler}
+            placeholder="댓글추가 ..."
+          />
           <SendCommentBtn>
             <Image
+              onClick={onClick}
               src={require("../../../images/cookieSend.png")}
               alt="https://icons8.com/icon/s3wZZp6L8B9s/send Send icon by https://icons8.com"
             />
