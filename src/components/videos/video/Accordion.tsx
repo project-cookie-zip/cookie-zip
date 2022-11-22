@@ -3,13 +3,19 @@ import Image from "next/image";
 import { useState } from "react";
 import { CommentModal } from "./CommentModal";
 
-export const Accordion = ({ baseImage }: { baseImage: string }) => {
+export const Accordion = ({
+  baseImage,
+  videoState,
+}: {
+  baseImage: string;
+  videoState: any;
+}) => {
   const closeDetailse = () => {
     console.log("댓글닫기");
     const details = document.querySelector("details");
     details?.removeAttribute("open");
   };
-
+  console.log("프롭스", videoState);
   // add comment modal
   const [showModal, setShowModal] = useState(false);
 
