@@ -10,7 +10,7 @@ export default function DetailPost() {
 
   const [videoTest, setVideoTest] = useState("");
   const getVideo = async () => {
-    const { data } = await axios.get(`/api/videos/${1}`);
+    const { data } = await axios.get(`/api/videos/${3}`);
     console.log(data);
     console.log(data.video.videoUrl);
     setVideoTest(data?.video.videoUrl);
