@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Accordion } from "src/components/videos/video/Accordion";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { TimeToToday } from "@utils/client/timeToToday";
 
@@ -19,7 +19,12 @@ export default function DetailPost() {
   };
 
   // get video's data fetch
-  useEffect(() => {
+  // useEffect(() => {
+  //   if (query.id !== undefined) {
+  //     getVideo();
+  //   }
+  // }, [query.id]);
+  useLayoutEffect(() => {
     if (query.id !== undefined) {
       getVideo();
     }
