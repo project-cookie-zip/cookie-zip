@@ -67,7 +67,7 @@ export default function AddPost() {
   // form data //
   interface sendData {
     title: string;
-    content: string;
+    description: string;
     category: string;
     // video: string | ArrayBuffer | null | Blob;
   }
@@ -77,9 +77,6 @@ export default function AddPost() {
     category: category,
     // video: mediaSend,
   };
-
-  // uploadURL
-  const [uploadURL, setUploadURL] = useState("");
 
   const addVideo = async () => {
     if (title === "") {
@@ -219,7 +216,7 @@ export default function AddPost() {
 
 const FormContainer = styled.form`
   margin: 0 auto;
-  /* margin-top: 50px; */
+  margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;

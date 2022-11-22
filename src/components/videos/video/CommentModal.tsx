@@ -1,7 +1,13 @@
 import styled from "styled-components";
 import Image from "next/image";
 
-export const CommentModal = ({ showModal, closeModal }) => {
+export const CommentModal = ({
+  showModal,
+  closeModal,
+}: {
+  showModal: any;
+  closeModal: any;
+}) => {
   const baseImage = `https://source.boringavatars.com/beam/110/$1?colors=DF9E75,A9653B,412513,412510,412500`;
 
   return (
