@@ -4,18 +4,27 @@ import Link from "next/link";
 import { Accordion } from "src/components/videos/video/Accordion";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { TimeToToday } from "@utils/client/timeToToday";
 
 export default function DetailPost() {
+  const { query } = useRouter();
   const baseImage: string = `https://source.boringavatars.com/beam/110/$1?colors=DF9E75,A9653B,412513,412510,412500`;
 
-  const [videoTest, setVideoTest] = useState("");
+  const urlID = query.id;
+
+  const [viewers, setViewers] = useState();
+  const [dateTime, setDateTime] = useState("");
+  const [videoFrame, setVideoFrame] = useState("");
   const getVideo = async () => {
-    const { data } = await axios.get(`/api/videos/${1}`);
-    console.log(data);
-    console.log(data.video.videoUrl);
-    setVideoTest(data?.video.videoUrl);
+    const { data } = await axios.get(`/api/videos/${urlID}`);
+    setViewers(data?.video.views);
+    const timeData = TimeToToday(new Date(data?.video.createdAt));
+    setDateTime(timeData);
+    setVideoFrame(data?.video.videoUrl);
   };
 
+  // get video's data fetch
   useEffect(() => {
     getVideo();
   }, []);
@@ -35,7 +44,7 @@ export default function DetailPost() {
       <VideoWrap>
         <VideoView
           // src="https://embed.cloudflarestream.com/embed/iframe-player.4eff9464.js"
-          src={videoTest}
+          src={videoFrame}
           allow="fullscreen"
           // controls
         />
@@ -43,8 +52,8 @@ export default function DetailPost() {
       <ContentHeader>
         <Title>제목</Title>
         <SideInfo>
-          <span>조회수00회</span>
-          <span>1일 전</span>
+          <span>조회수 {viewers}회</span>
+          <span>{dateTime}</span>
         </SideInfo>
       </ContentHeader>
       <UserInfo>
