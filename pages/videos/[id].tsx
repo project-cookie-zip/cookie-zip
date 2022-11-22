@@ -2,9 +2,23 @@ import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
 import { Accordion } from "src/components/videos/video/Accordion";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function DetailPost() {
   const baseImage: string = `https://source.boringavatars.com/beam/110/$1?colors=DF9E75,A9653B,412513,412510,412500`;
+
+  const [videoTest, setVideoTest] = useState("");
+  const getVideo = async () => {
+    const { data } = await axios.get(`/api/videos/${1}`);
+    console.log(data);
+    console.log(data.video.videoUrl);
+    setVideoTest(data?.video.videoUrl);
+  };
+
+  useEffect(() => {
+    getVideo();
+  }, []);
 
   // subscribe
   const toSubscribe = () => {
@@ -15,16 +29,15 @@ export default function DetailPost() {
   const likeUp = () => {
     console.log("좋아용");
   };
-  const likeDown = () => {
-    console.log("싫어용");
-  };
 
   return (
     <Container>
       <VideoWrap>
         <VideoView
-          src="https://embed.cloudflarestream.com/embed/iframe-player.4eff9464.js"
-          controls
+          // src="https://embed.cloudflarestream.com/embed/iframe-player.4eff9464.js"
+          src={videoTest}
+          allow="fullscreen"
+          // controls
         />
       </VideoWrap>
       <ContentHeader>
@@ -51,14 +64,17 @@ export default function DetailPost() {
         <SubscribeBtn onClick={() => toSubscribe()}>구독</SubscribeBtn>
       </UserInfo>
       <SideBtnsWrap>
+        {/* 싫어요 없애고 좋아요만 남길까 생각중 */}
         <LikesBtns>
           <button onClick={() => likeUp()}>
-            <Image src={require("../../src/images/cookieLike.png")} alt="" />
-          </button>
-          <button onClick={() => likeDown()}>
-            <Image src={require("../../src/images/cookieUnLike.png")} alt="" />
+            <Image
+              src={require("../../src/images/cookieLike.png")}
+              alt=""
+              width={40}
+            />
           </button>
         </LikesBtns>
+        <span>0</span>
       </SideBtnsWrap>
       <Accordion baseImage={baseImage} />
     </Container>
@@ -84,11 +100,17 @@ const Container = styled.div`
 `;
 
 const VideoWrap = styled.div`
+  display: flex;
+  justify-content: center;
   width: 100vw;
   height: 300px;
 `;
 
-const VideoView = styled.video`
+// const VideoView = styled.video`
+//   width: 100vw;
+//   height: 300px;
+// `;
+const VideoView = styled.iframe`
   width: 100vw;
   height: 300px;
 `;
@@ -160,9 +182,22 @@ const subscribeCancle = styled.button`
 
 const SideBtnsWrap = styled.div`
   display: flex;
+  align-items: center;
   width: 100vw;
 `;
 
 const LikesBtns = styled.div`
   padding: 10px;
+
+  & button {
+    border: none;
+    background: none;
+    border-radius: 15px;
+    /* width: 40px;
+    height: 40px; */
+
+    &:active {
+      background-color: #ececec;
+    }
+  }
 `;

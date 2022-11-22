@@ -67,7 +67,7 @@ export default function AddPost() {
   // form data //
   interface sendData {
     title: string;
-    content: string;
+    description: string;
     category: string;
     // video: string | ArrayBuffer | null | Blob;
   }
@@ -77,9 +77,6 @@ export default function AddPost() {
     category: category,
     // video: mediaSend,
   };
-
-  // uploadURL
-  const [uploadURL, setUploadURL] = useState("");
 
   const addVideo = async () => {
     if (title === "") {
@@ -95,19 +92,35 @@ export default function AddPost() {
     } else {
       let formData = new FormData();
       formData.append("file", testSend);
-      // formData.append("multipart/form-data", new BloB([JOSN.stringify(sendData)]));
       const {
-        data,
-        data: { uploadURL },
+        data: { uploadURL, uid },
       } = await axios.get("/api/video");
-      console.log(data);
-      console.log(uploadURL);
-      axios.post(uploadURL, formData).then(res => console.log(res));
+      console.log(uploadURL, uid);
+      await axios.post(uploadURL, formData).then(res => console.log(res));
+
+      const {
+        result: { thumbnail, preview },
+      } = await (
+        await fetch(
+          `https://api.cloudflare.com/client/v4/accounts/e564ea5cae1cb0fb8004a589abe35f63/stream/${uid}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer 2PptoKx0NQLjSOoPxLgePH2I6GztAIx1p-hKv6Z0`,
+              "Content-Type": "application/json",
+            },
+          },
+        )
+      ).json();
+
+      await axios.post("/api/videos", {
+        title,
+        description: content,
+        videoUrl: preview,
+        thumbnailUrl: thumbnail,
+      });
     }
   };
-
-  console.log("send", mediaSend);
-  console.log("view", mediaView);
 
   return (
     <FormContainer>
@@ -203,7 +216,7 @@ export default function AddPost() {
 
 const FormContainer = styled.form`
   margin: 0 auto;
-  /* margin-top: 50px; */
+  margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;

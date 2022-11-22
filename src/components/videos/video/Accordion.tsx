@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { CommentModal } from "./CommentModal";
 
-export const Accordion = ({ baseImage }) => {
+export const Accordion = ({ baseImage }: { baseImage: string }) => {
   const closeDetailse = () => {
     console.log("댓글닫기");
     const details = document.querySelector("details");
