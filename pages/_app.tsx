@@ -6,11 +6,9 @@ import { useState, useEffect } from "react";
 import { darkTheme, lightTheme } from "../src/theme";
 import { Layout } from "../src/components/layout/Layout";
 import { QueryClient, QueryClientProvider } from "react-query";
-
+const queryClient = new QueryClient();
 export default function App({ Component, pageProps }: AppProps) {
   const [isDark, setIsDark] = useState(false);
-
-  const queryClient = new QueryClient();
 
   return (
     <QueryClientProvider client={queryClient}>
