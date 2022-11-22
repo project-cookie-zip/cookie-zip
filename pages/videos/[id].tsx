@@ -29,9 +29,6 @@ export default function DetailPost() {
   const likeUp = () => {
     console.log("좋아용");
   };
-  const likeDown = () => {
-    console.log("싫어용");
-  };
 
   return (
     <Container>
@@ -76,14 +73,8 @@ export default function DetailPost() {
               width={40}
             />
           </button>
-          <button onClick={() => likeDown()}>
-            <Image
-              src={require("../../src/images/cookieUnLike.png")}
-              alt=""
-              width={40}
-            />
-          </button>
         </LikesBtns>
+        <span>0</span>
       </SideBtnsWrap>
       <Accordion baseImage={baseImage} />
     </Container>
@@ -109,6 +100,8 @@ const Container = styled.div`
 `;
 
 const VideoWrap = styled.div`
+  display: flex;
+  justify-content: center;
   width: 100vw;
   height: 300px;
 `;
@@ -189,6 +182,7 @@ const subscribeCancle = styled.button`
 
 const SideBtnsWrap = styled.div`
   display: flex;
+  align-items: center;
   width: 100vw;
 `;
 
