@@ -1,4 +1,4 @@
-export function TimeToToday(createdAt: any) {
+export function TimeToToday(createdAt: string) {
   const milliSeconds = new Date() - createdAt;
   const seconds = milliSeconds / 1000;
   const minutes = seconds / 60;
