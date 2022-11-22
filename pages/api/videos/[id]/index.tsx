@@ -45,6 +45,17 @@ async function handler(
     },
   });
 
+  await client.video.update({
+    where: {
+      id: Number(video?.id),
+    },
+    data: {
+      views: {
+        increment: 1,
+      },
+    },
+  });
+
   // subscribe 나중에 추가
   res.json({
     ok: true,
@@ -52,17 +63,9 @@ async function handler(
   });
 }
 
-// export default withApiSession(
-//   withHandler({
-//     methods: ["GET"],
-//     handler,
-//   }),
-// );
-
 export default withApiSession(
   withHandler({
     methods: ["GET"],
     handler,
-    isPrivate: false,
   }),
 );
