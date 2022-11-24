@@ -20,6 +20,10 @@ export const Header = () => {
 };
 
 const Container = styled.div`
+  background-color: white;
+  top: 0;
+  position: fixed;
+  min-width: 480px;
   display: flex;
   justify-content: space-between;
   align-items: center;
