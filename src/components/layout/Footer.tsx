@@ -34,6 +34,7 @@ const Container = styled.div`
   margin-top: 120px;
   position: absolute;
   background-color: #df9e75;
+  position: fixed;
   bottom: 0;
 
   /* max-width: 480px; */

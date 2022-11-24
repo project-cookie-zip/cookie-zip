@@ -1,7 +1,10 @@
 import styled from "styled-components";
 import Image from "next/image";
-import { useState } from "react";
+import { Key, useState } from "react";
 import { CommentModal } from "./CommentModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEllipsisV } from "@fortawesome/free-solid-svg-icons/faEllipsisV";
+import IconButton from "@mui/material/IconButton";
 
 export const Accordion = ({
   baseImage,
@@ -15,7 +18,8 @@ export const Accordion = ({
     const details = document.querySelector("details");
     details?.removeAttribute("open");
   };
-  console.log("프롭스", videoState);
+  const comment = videoState?.comments;
+  console.log(comment);
   // add comment modal
   const [showModal, setShowModal] = useState(false);
 
@@ -46,7 +50,28 @@ export const Accordion = ({
           <span onClick={openModal}>댓글 추가 ...</span>
         </AddComment>
         <CommentModal showModal={showModal} closeModal={closeModal} />
-        <CommentsWrap>댓글들이 여기 달릴거에요</CommentsWrap>
+
+        {comment?.map(
+          (comments: {
+            id: Key | null | undefined;
+            content: string | number;
+          }) => (
+            // eslint-disable-next-line react/jsx-key
+            <CommentsWrap key={comments.id}>
+              <Image
+                src={baseImage}
+                alt="프로필사진"
+                width={60}
+                height={60}
+                unoptimized={true}
+              />
+              <ContentWrap> {comments.content}</ContentWrap>
+              <IconButton aria-label="Example">
+                <FontAwesomeIcon icon={faEllipsisV} />
+              </IconButton>
+            </CommentsWrap>
+          ),
+        )}
       </CommentsLine>
     </AcodianWrap>
   );
@@ -129,5 +154,10 @@ const AddComment = styled.div`
 `;
 
 const CommentsWrap = styled.div`
-  /* border-bottom: 1px solid #e5e8eb; */
+  display: flex;
+  padding: 15px;
+  align-items: center;
+`;
+const ContentWrap = styled.div`
+  margin-left: 10px;
 `;
