@@ -22,7 +22,7 @@ export default function MyPage() {
 }
 
 const STTopBar = styled.div`
-  margin-top: 20px;
+  margin-top: 43px;
   height: 40px;
   display: flex;
   justify-content: space-around;

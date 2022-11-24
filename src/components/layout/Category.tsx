@@ -25,6 +25,10 @@ export default function Category() {
 }
 
 const CategoryWrap = styled.div`
+  position: fixed;
+  top: 23px;
+  min-width: 480px;
+  background-color: white;
   margin-top: 20px;
   height: 40px;
   display: flex;
