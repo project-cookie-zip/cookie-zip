@@ -6,10 +6,22 @@ import axios from "axios";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { TimeToToday } from "@utils/client/timeToToday";
+import { useQuery } from "react-query";
 
 export default function DetailPost() {
   const { query } = useRouter();
   const baseImage: string = `https://source.boringavatars.com/beam/110/$1?colors=DF9E75,A9653B,412513,412510,412500`;
+
+  const apiTest = async () => {
+    const data = await axios.get(`/api/videos/${query.id}`);
+    return data?.data.video;
+  };
+
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ["getVideoData"],
+    queryFn: apiTest,
+  });
+  console.log(data);
 
   const [videoData, setVideoData] = useState<any>();
 
@@ -17,14 +29,7 @@ export default function DetailPost() {
     const { data } = await axios.get(`/api/videos/${query.id}`);
     setVideoData(data.video);
   };
-  // testcode
 
-  // get video's data fetch
-  // useEffect(() => {
-  //   if (query.id !== undefined) {
-  //     getVideo();
-  //   }
-  // }, [query.id]);
   useLayoutEffect(() => {
     if (query.id !== undefined) {
       getVideo();
@@ -40,6 +45,8 @@ export default function DetailPost() {
   const likeUp = () => {
     console.log("좋아용");
   };
+
+  /// pathname 수신 지연으로, 로딩 스켈레톤 UI 제작 예정
 
   return (
     <Container>

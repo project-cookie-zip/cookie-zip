@@ -15,10 +15,12 @@ export const Footer = () => {
       <Link href={"/videos/add"}>
         <Image src={require("../../images/cookieUpload.png")} alt="업로드" />
       </Link>
-      <Image
-        src={require("../../images/cookieOthers.png")}
-        alt="보관함/구독/좋아요 등"
-      />
+      <Link href={"/subscribe"}>
+        <Image
+          src={require("../../images/cookieOthers.png")}
+          alt="보관함/구독/좋아요 등"
+        />
+      </Link>
     </Container>
   );
 };
