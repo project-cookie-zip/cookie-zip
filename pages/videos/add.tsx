@@ -64,19 +64,19 @@ export default function AddPost() {
   // category value
   const [category, setCategory] = useState("");
 
-  // form data //
-  interface sendData {
-    title: string;
-    description: string;
-    category: string;
-    // video: string | ArrayBuffer | null | Blob;
-  }
-  let sendData = {
-    title: title,
-    content: content,
-    category: category,
-    // video: mediaSend,
-  };
+  // form data // 클라우드 플레어 특성상 해당 코드는 미사용
+  // interface sendData {
+  //   title: string;
+  //   description: string;
+  //   category: string;
+  //   // video: string | ArrayBuffer | null | Blob;
+  // }
+  // let sendData = {
+  //   title: title,
+  //   content: content,
+  //   category: category,
+  //   // video: mediaSend,
+  // };
 
   const addVideo = async () => {
     if (title === "") {
