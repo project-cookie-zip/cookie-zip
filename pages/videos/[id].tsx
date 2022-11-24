@@ -17,6 +17,7 @@ export default function DetailPost() {
     const { data } = await axios.get(`/api/videos/${query.id}`);
     setVideoData(data.video);
   };
+
   // testcode
 
   // get video's data fetch
