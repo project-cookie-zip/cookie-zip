@@ -19,8 +19,8 @@ export default function App({ Component, pageProps }: AppProps) {
       <RecoilRoot>
         <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
           <Layout>
-            {isLoading ? <LoadingSpinner /> : <Component {...pageProps} />}
-            {/* <Component {...pageProps} /> */}
+            {isLoading ? <LoadingSpinner /> : null}
+            <Component {...pageProps} />
           </Layout>
         </ThemeProvider>
       </RecoilRoot>
