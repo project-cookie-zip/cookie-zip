@@ -216,7 +216,7 @@ export default function AddPost() {
 
 const FormContainer = styled.form`
   margin: 0 auto;
-  margin-top: 30px;
+  margin-top: 55px;
   display: flex;
   flex-direction: column;
   align-items: center;
