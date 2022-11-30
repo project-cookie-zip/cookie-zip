@@ -1,8 +1,12 @@
 import Image from "next/image";
 import styled from "styled-components";
 import Link from "next/link";
+import { useLoginCheck } from "../../hooks/useLoginCheck";
 
 export const Footer = () => {
+  const loginCheck = useLoginCheck();
+  console.log(loginCheck);
+
   return (
     <Container>
       <Link href={"/"}>
@@ -11,10 +15,12 @@ export const Footer = () => {
       <Link href={"/videos/add"}>
         <Image src={require("../../images/cookieUpload.png")} alt="업로드" />
       </Link>
-      <Image
-        src={require("../../images/cookieOthers.png")}
-        alt="보관함/구독/좋아요 등"
-      />
+      <Link href={"/subscribe"}>
+        <Image
+          src={require("../../images/cookieOthers.png")}
+          alt="보관함/구독/좋아요 등"
+        />
+      </Link>
     </Container>
   );
 };
@@ -28,11 +34,13 @@ const Container = styled.div`
   margin-top: 120px;
   position: absolute;
   background-color: #df9e75;
+  position: fixed;
   bottom: 0;
 
-  max-width: 480px;
+  /* max-width: 480px; */
   width: 100vw;
   height: 50px;
+  z-index: 11;
 
   & img {
     width: 40px;

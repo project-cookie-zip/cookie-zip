@@ -3,27 +3,46 @@ import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
 import Swal from "sweetalert2";
+import axios from "axios";
 
 export default function AddPost() {
   // 동영상 처리
   const [mediaView, setMediaView] = useState("");
-  const [mediaSend, setMediaSend] = useState<string | ArrayBuffer | null>("");
+  const [mediaSend, setMediaSend] = useState<string | any>("");
+  const [testSend, setTestSend] = useState("");
 
   const uploadFile = (file: any) => {
-    const videourl = URL.createObjectURL(file);
-    setMediaView(videourl);
-    const reader = new FileReader();
-    for (let i = 0; i < file.length; i++) {
-      reader.readAsDataURL(file[i]);
-      reader.onloadend = () => {
-        let thisMidea = reader.result;
-        setMediaSend(thisMidea);
-      };
+    console.log(file);
+    setTestSend(file);
+    let maxSize = 200 * 1024 * 1024;
+    let fileSize = file.size;
+    if (fileSize > maxSize) {
+      Swal.fire({
+        title: "업로드할 동영상은 200mb 이하로 선택해주세요",
+        icon: "warning",
+        confirmButtonColor: "#A9653B",
+        confirmButtonText: "알겠어용",
+      }).then(result => {
+        if (result.value) {
+        }
+      });
+    } else {
+      const videourl = URL.createObjectURL(file);
+      setMediaView(videourl);
+      const reader = new FileReader();
+      for (let i = 0; i < file.length; i++) {
+        reader.readAsDataURL(file[i]);
+        reader.onloadend = () => {
+          let thisMidea = reader.result;
+          setMediaSend(thisMidea);
+        };
+      }
     }
   };
 
   const deleteVideo = () => {
     setMediaView("");
+    setMediaSend("");
   };
 
   // title value
@@ -42,18 +61,25 @@ export default function AddPost() {
     setTextareaHeight(content.split("\n").length);
   }, [content]);
 
-  interface sendData {
-    title: string;
-    content: string;
-    video: string | ArrayBuffer | null;
-  }
-  let sendData = {
-    title: title,
-    content: content,
-    video: mediaSend,
-  };
-  const addVideo = () => {
-    if (title === "" || content === "" || mediaSend === "") {
+  // category value
+  const [category, setCategory] = useState("");
+
+  // form data // 클라우드 플레어 특성상 해당 코드는 미사용
+  // interface sendData {
+  //   title: string;
+  //   description: string;
+  //   category: string;
+  //   // video: string | ArrayBuffer | null | Blob;
+  // }
+  // let sendData = {
+  //   title: title,
+  //   content: content,
+  //   category: category,
+  //   // video: mediaSend,
+  // };
+
+  const addVideo = async () => {
+    if (title === "") {
       Swal.fire({
         title: "글을 확인해주세요ㅠㅠ",
         icon: "warning",
@@ -64,6 +90,35 @@ export default function AddPost() {
         }
       });
     } else {
+      let formData = new FormData();
+      formData.append("file", testSend);
+      const {
+        data: { uploadURL, uid },
+      } = await axios.get("/api/video");
+      console.log(uploadURL, uid);
+      await axios.post(uploadURL, formData).then(res => console.log(res));
+
+      const {
+        result: { thumbnail, preview },
+      } = await (
+        await fetch(
+          `https://api.cloudflare.com/client/v4/accounts/e564ea5cae1cb0fb8004a589abe35f63/stream/${uid}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer 2PptoKx0NQLjSOoPxLgePH2I6GztAIx1p-hKv6Z0`,
+              "Content-Type": "application/json",
+            },
+          },
+        )
+      ).json();
+
+      await axios.post("/api/videos", {
+        title,
+        description: content,
+        videoUrl: preview,
+        thumbnailUrl: thumbnail,
+      });
     }
   };
 
@@ -91,7 +146,6 @@ export default function AddPost() {
           type="file"
           accept="video/mp4,video/mkv, video/x-m4v,video/*"
           onChange={(e: any) => {
-            // React.event -- type 공부예정
             uploadFile(e.target.files[0]);
           }}
         />
@@ -122,19 +176,29 @@ export default function AddPost() {
           maxLength={130}
         />
         <p>{content.length}/130</p>
+        <CateSelect
+          name="category"
+          id="category"
+          defaultValue={0}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+            setCategory(e.target.value)
+          }
+        >
+          <option value="0" disabled>
+            카테고리
+          </option>
+          <option value="1">게임</option>
+          <option value="2">음악</option>
+          <option value="3">요리</option>
+          <option value="4">쇼핑</option>
+          <option value="5">스포츠</option>
+          <option value="6">동물</option>
+          <option value="7">연예</option>
+          <option value="8">뷰티</option>
+          <option value="9">영화</option>
+          <option value="10">먹방</option>
+        </CateSelect>
       </ContentsWrap>
-      <select name="category" id="category">
-        <option value="1">게임</option>
-        <option value="2">음악</option>
-        <option value="3">요리</option>
-        <option value="4">쇼핑</option>
-        <option value="5">스포츠</option>
-        <option value="6">동물</option>
-        <option value="7">연예</option>
-        <option value="8">뷰티</option>
-        <option value="9">영화</option>
-        <option value="10">먹방</option>
-      </select>
       <ButtonWrap>
         <button onClick={addVideo} type="button">
           업로드
@@ -151,7 +215,7 @@ export default function AddPost() {
 
 const FormContainer = styled.form`
   margin: 0 auto;
-  margin-top: 50px;
+  margin-top: 55px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -215,7 +279,7 @@ const CancelBtn = styled.button`
 `;
 
 const ContentsWrap = styled.div`
-  margin-top: 30px;
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
   width: 90vw;
@@ -259,6 +323,16 @@ const ContentsWrap = styled.div`
     margin-bottom: 15px;
     text-align: right;
   }
+`;
+
+const CateSelect = styled.select`
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 80px;
+  height: 25px;
+  text-align: center;
+  border: 1px solid #a9653b;
+  border-radius: 5px;
 `;
 
 const ButtonWrap = styled.div`

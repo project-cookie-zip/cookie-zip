@@ -25,7 +25,7 @@ async function handler(
   }
   if (req.method === "POST") {
     const {
-      body: { title, description, videoUrl },
+      body: { title, description, videoUrl, thumbnailUrl, category },
       session: { user },
     } = req;
     const video = await client.video.create({
@@ -33,6 +33,8 @@ async function handler(
         title,
         description,
         videoUrl,
+        thumbnailUrl,
+        category,
         user: {
           connect: {
             id: user?.id,

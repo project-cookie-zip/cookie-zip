@@ -38,9 +38,12 @@ model Video {
   title        String
   description  String?   @db.MediumText
   videoUrl     String
+  thumbnailUrl String
+  category     String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   userId       Int
+  views        Int       @default(0)
   user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   comments     Comment[]
   likes        Like[]

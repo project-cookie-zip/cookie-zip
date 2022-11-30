@@ -41,7 +41,9 @@ export default function Login() {
         </Div>
 
         <ButtonDiv>
-          <Button type="submit" />
+          <Button type="submit">
+            <ButtonText className="text">로그인</ButtonText>
+          </Button>
 
           <Link href="/sign">
             {" "}
@@ -67,7 +69,7 @@ const Input = styled.input`
   outline: none;
 `;
 const Sign = styled.h5`
-  //padding: 20px;
+  // todo padding: 20px;
   //background-color: #9d6511;
 `;
 const Text = styled.h5`
@@ -96,7 +98,7 @@ const ButtonDiv = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-const Button = styled.input`
+const Button = styled.button`
   & a {
     text-decoration: none;
   }

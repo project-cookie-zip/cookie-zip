@@ -36,6 +36,11 @@ async function handler(
           },
         },
       },
+      likes: {
+        select: {
+          userId: true,
+        },
+      },
       _count: {
         select: {
           comments: true,
@@ -45,10 +50,34 @@ async function handler(
     },
   });
 
+  const isLike = Boolean(
+    await client.like.findFirst({
+      where: {
+        videoId: Number(id),
+        userId: user?.id,
+      },
+      select: {
+        id: true,
+      },
+    }),
+  );
+
+  await client.video.update({
+    where: {
+      id: Number(video?.id),
+    },
+    data: {
+      views: {
+        increment: 1,
+      },
+    },
+  });
+
   // subscribe 나중에 추가
   res.json({
     ok: true,
     video,
+    isLike,
   });
 }
 

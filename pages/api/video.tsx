@@ -13,7 +13,9 @@ async function handler(
   res: NextApiResponse<ResponseType>,
 ) {
   const maxDurationSeconds = 3600;
-  const data = { maxDurationSeconds };
+  const thumbnailTimestampPct = 0.529241;
+  // const allowedOrigins = [];
+  const data = { maxDurationSeconds, thumbnailTimestampPct };
   const body = JSON.stringify(data);
   const response = await (
     await fetch(
