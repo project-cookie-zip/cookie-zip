@@ -36,6 +36,11 @@ async function handler(
           },
         },
       },
+      likes: {
+        select: {
+          userId: true,
+        },
+      },
       _count: {
         select: {
           comments: true,
