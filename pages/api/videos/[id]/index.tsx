@@ -50,6 +50,18 @@ async function handler(
     },
   });
 
+  const isLike = Boolean(
+    await client.like.findFirst({
+      where: {
+        videoId: Number(id),
+        userId: user?.id,
+      },
+      select: {
+        id: true,
+      },
+    }),
+  );
+
   await client.video.update({
     where: {
       id: Number(video?.id),
@@ -65,6 +77,7 @@ async function handler(
   res.json({
     ok: true,
     video,
+    isLike,
   });
 }
 
