@@ -7,9 +7,9 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Accordion } from "src/components/videos/video/Accordion";
+import { LikeBtn } from "src/components/videos/video/LikeBtn";
 import { TimeToToday } from "@utils/client/timeToToday";
 import { LoadingSpinner } from "src/components/videos/video/LoadingSpinner";
-import { useLoading } from "src/hooks/useLoading";
 
 export default function DetailPost({ videoDatas }: any) {
   const { query } = useRouter();
@@ -22,22 +22,13 @@ export default function DetailPost({ videoDatas }: any) {
   // console.log("SSPdata", videoDatas);
 
   const { data, isError, isLoading } = useQuery({
-    queryKey: ["getVideoData"],
+    queryKey: "getVideoData",
     queryFn: apiTest,
   });
   console.log(data);
+  // console.log(data?._count.likes);
 
   const baseImage: string = `https://source.boringavatars.com/beam/110/$${data?.user.id}?colors=DF9E75,A9653B,412513,412510,412500`;
-
-  // subscribe
-  const toSubscribe = () => {
-    console.log("구독");
-  };
-
-  // likes
-  const likeUp = () => {
-    console.log("좋아용");
-  };
 
   return (
     <Container>
@@ -69,19 +60,10 @@ export default function DetailPost({ videoDatas }: any) {
               <span>UserID에옹</span>
               <span>구독자수(10만)</span>
             </UsersData>
-            <SubscribeBtn onClick={() => toSubscribe()}>구독</SubscribeBtn>
+            <SubscribeBtn>구독</SubscribeBtn>
           </UserInfo>
           <SideBtnsWrap>
-            <LikesBtns>
-              <button onClick={() => likeUp()}>
-                <Image
-                  src={require("../../src/images/cookieLike.png")}
-                  alt="좋아요"
-                  width={40}
-                />
-              </button>
-            </LikesBtns>
-            <span>{0}</span>
+            <LikeBtn likeCount={data?._count.likes} pageQuery={query?.id} />
           </SideBtnsWrap>
           <Accordion baseImage={baseImage} videoState={data} />
         </>
@@ -213,18 +195,21 @@ const LikesBtns = styled.div`
 // SSP 사용 자제 예정
 // import fetch from "isomorphic-unfetch";
 // import { prisma } from "@prisma/client";
-export const getServerSideProps = async ({ context }: any) => {
+export const getServerSideProps = async (context: any) => {
   try {
     const { req } = context;
+    // console.log("reqTTest", req);
+    console.log("컨텍스트 무수한데이터", context);
     let pathname = req.url
       .split("/")
       [req.url.split("/").length - 1].split(".")[0];
     console.log("hello pathname", pathname);
-    // const res = await axios.get(`localhost:3000/api/videos/${pathname}`);
-    // const videoDatas = res.data;
-    // console.log("ttest", videoDatas);
-    // console.log("reqTTest", req);
-    const videoDatas = { pathname: pathname };
+    const res = await axios.get(`localhost:3000/api/videos/${pathname}`);
+    const videoDatas = res.data;
+    // const videoDatas = req;
+    console.log("ttest", videoDatas);
+
+    // const videoDatas = { pathname: "something" };
 
     return {
       props: {

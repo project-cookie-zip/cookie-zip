@@ -146,7 +146,6 @@ export default function AddPost() {
           type="file"
           accept="video/mp4,video/mkv, video/x-m4v,video/*"
           onChange={(e: any) => {
-            // React.event -- type 공부예정
             uploadFile(e.target.files[0]);
           }}
         />
