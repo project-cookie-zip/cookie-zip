@@ -27,7 +27,7 @@ export default function SignUp() {
     });
   };
 
-  //password type 변경용 state
+  // TODO : password type 변경용 state
   const [passwordType, setPasswordType] = useState({
     type: "password",
     visible: false,
@@ -75,8 +75,9 @@ export default function SignUp() {
               <ButtonText>뒤로가기</ButtonText>
             </Link>
           </Button>
-          <input type="submit" className="sign" />
-          <ButtonText>가입하기</ButtonText>
+          <Button type="submit" className="sign">
+            <ButtonText className="signtext">가입하기</ButtonText>
+          </Button>
         </ButtonDiv>
       </form>
     </div>
@@ -95,8 +96,8 @@ const Input = styled.input`
   outline: none;
 `;
 const Sign = styled.h5`
-  //padding: 20px;
-  //background-color: #9d6511;
+  padding: 20px;
+  background-color: #9d6511;
 `;
 const Text = styled.h5`
   margin: 10px 0px;
@@ -147,6 +148,13 @@ const Button = styled.button`
 `;
 const ButtonText = styled.p`
   color: white;
-  font-size: 18px;
+  font-size: 16px;
+  font-weight: bold;
   text-align: center;
+  &.signtext {
+    color: #1e1e1e;
+    font-weight: bold;
+    font-family: "Work Sans", sans-serif;
+    font-size: 16px;
+  }
 `;

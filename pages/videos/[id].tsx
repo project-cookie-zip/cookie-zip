@@ -1,24 +1,33 @@
 import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
-import { Accordion } from "src/components/videos/video/Accordion";
 import axios from "axios";
+import Router from "next/router";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
+import { Accordion } from "src/components/videos/video/Accordion";
+import { TimeToToday } from "@utils/client/timeToToday";
+import { LoadingSpinner } from "src/components/videos/video/LoadingSpinner";
+import { useLoading } from "src/hooks/useLoading";
 
-export default function DetailPost() {
-  const baseImage: string = `https://source.boringavatars.com/beam/110/$1?colors=DF9E75,A9653B,412513,412510,412500`;
+export default function DetailPost({ videoDatas }: any) {
+  const { query } = useRouter();
+  console.log("페이지 패스네임", query);
 
-  const [videoTest, setVideoTest] = useState("");
-  const getVideo = async () => {
-    const { data } = await axios.get(`/api/videos/${3}`);
-    console.log(data);
-    console.log(data.video.videoUrl);
-    setVideoTest(data?.video.videoUrl);
+  const apiTest = async () => {
+    const data = await axios.get(`/api/videos/${query.id}`);
+    return data?.data.video;
   };
+  // console.log("SSPdata", videoDatas);
 
-  useEffect(() => {
-    getVideo();
-  }, []);
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ["getVideoData"],
+    queryFn: apiTest,
+  });
+  console.log(data);
+
+  const baseImage: string = `https://source.boringavatars.com/beam/110/$${data?.user.id}?colors=DF9E75,A9653B,412513,412510,412500`;
 
   // subscribe
   const toSubscribe = () => {
@@ -32,57 +41,58 @@ export default function DetailPost() {
 
   return (
     <Container>
-      <VideoWrap>
-        <VideoView
-          // src="https://embed.cloudflarestream.com/embed/iframe-player.4eff9464.js"
-          src={videoTest}
-          allow="fullscreen"
-          // controls
-        />
-      </VideoWrap>
-      <ContentHeader>
-        <Title>제목</Title>
-        <SideInfo>
-          <span>조회수00회</span>
-          <span>1일 전</span>
-        </SideInfo>
-      </ContentHeader>
-      <UserInfo>
-        <UsersData>
-          <Link href={"/"}>
-            <Image
-              src={baseImage}
-              alt="프로필사진"
-              width={60}
-              height={60}
-              unoptimized={true}
-            />
-          </Link>
-          <span>UserID에옹</span>
-          <span>구독자수(10만)</span>
-        </UsersData>
-        <SubscribeBtn onClick={() => toSubscribe()}>구독</SubscribeBtn>
-      </UserInfo>
-      <SideBtnsWrap>
-        {/* 싫어요 없애고 좋아요만 남길까 생각중 */}
-        <LikesBtns>
-          <button onClick={() => likeUp()}>
-            <Image
-              src={require("../../src/images/cookieLike.png")}
-              alt=""
-              width={40}
-            />
-          </button>
-        </LikesBtns>
-        <span>0</span>
-      </SideBtnsWrap>
-      <Accordion baseImage={baseImage} />
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <>
+          <VideoWrap>
+            <VideoView src={data?.videoUrl} allow="fullscreen" />
+          </VideoWrap>
+          <ContentHeader>
+            <Title>제목</Title>
+            <SideInfo>
+              <span>조회수 {data?.views}회</span>
+              <span>{TimeToToday(new Date(data?.createdAt))}</span>
+            </SideInfo>
+          </ContentHeader>
+          <UserInfo>
+            <UsersData>
+              <Link href={"/"}>
+                <Image
+                  src={data?.user.avatar ? data?.user.avatar : baseImage}
+                  alt="프로필사진"
+                  width={60}
+                  height={60}
+                  unoptimized={true}
+                />
+              </Link>
+              <span>UserID에옹</span>
+              <span>구독자수(10만)</span>
+            </UsersData>
+            <SubscribeBtn onClick={() => toSubscribe()}>구독</SubscribeBtn>
+          </UserInfo>
+          <SideBtnsWrap>
+            <LikesBtns>
+              <button onClick={() => likeUp()}>
+                <Image
+                  src={require("../../src/images/cookieLike.png")}
+                  alt="좋아요"
+                  width={40}
+                />
+              </button>
+            </LikesBtns>
+            <span>{0}</span>
+          </SideBtnsWrap>
+          <Accordion baseImage={baseImage} videoState={data} />
+        </>
+      )}
     </Container>
   );
 }
 
 const Container = styled.div`
   margin: 0 auto;
+  margin-top: 45px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -106,10 +116,6 @@ const VideoWrap = styled.div`
   height: 300px;
 `;
 
-// const VideoView = styled.video`
-//   width: 100vw;
-//   height: 300px;
-// `;
 const VideoView = styled.iframe`
   width: 100vw;
   height: 300px;
@@ -201,3 +207,37 @@ const LikesBtns = styled.div`
     }
   }
 `;
+
+// SSP -- 데이터 URL은 맞으나 plz login err 발생(post man도 동일)
+// react query로 처리 예정
+// SSP 사용 자제 예정
+// import fetch from "isomorphic-unfetch";
+// import { prisma } from "@prisma/client";
+export const getServerSideProps = async ({ context }: any) => {
+  try {
+    const { req } = context;
+    let pathname = req.url
+      .split("/")
+      [req.url.split("/").length - 1].split(".")[0];
+    console.log("hello pathname", pathname);
+    // const res = await axios.get(`localhost:3000/api/videos/${pathname}`);
+    // const videoDatas = res.data;
+    // console.log("ttest", videoDatas);
+    // console.log("reqTTest", req);
+    const videoDatas = { pathname: pathname };
+
+    return {
+      props: {
+        videoDatas,
+      },
+    };
+  } catch (error) {
+    const videoDatas = { success: false };
+    console.log(error);
+    return {
+      props: {
+        videoDatas,
+      },
+    };
+  }
+};
