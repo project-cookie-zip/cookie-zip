@@ -3,11 +3,14 @@ import Image from "next/image";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useState } from "react";
 import axios from "axios";
+import { useVideoData } from "src/hooks/getAPIs/useVideoData";
 
 export const LikeBtn = ({ likeCount, pageQuery }: any) => {
   const queryClient = useQueryClient();
   const [isLiked, setisLiked] = useState<boolean>(false);
   console.log(isLiked);
+
+  // import query Data(videos)
 
   // 쿼리데이터
   const apiTest = async () => {
