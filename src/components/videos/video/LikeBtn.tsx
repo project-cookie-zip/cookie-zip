@@ -22,7 +22,6 @@ export const LikeBtn = ({ likeCount, pageQuery }: any) => {
   // like 처리 API
   const likesAPI = async () => {
     const data = await axios.post(`/api/videos/${pageQuery}/fav`);
-    console.log(data);
   };
 
   // like mutate
@@ -46,10 +45,10 @@ export const LikeBtn = ({ likeCount, pageQuery }: any) => {
         // return prev // 다중데이터시 prev props => 다음 map 후 처리 가능
       });
     },
-    onSettled: () => queryClient.invalidateQueries("getVideoData"), //끝나고 나면 데이터를 업데이트 시킨다
     onSuccess: () => {
-      queryClient.invalidateQueries("getVideoData");
+      // queryClient.invalidateQueries("getVideoData");
     },
+    onSettled: () => queryClient.invalidateQueries("getVideoData"), //끝나고 나면 데이터를 업데이트 시킨다
   });
 
   // likes
