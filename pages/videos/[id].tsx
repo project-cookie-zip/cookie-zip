@@ -21,9 +21,8 @@ export default function DetailPost({ videoDatas }: any) {
   };
   // console.log("SSPdata", videoDatas);
 
-  const { data, isError, isLoading } = useQuery({
-    queryKey: "getVideoData",
-    queryFn: apiTest,
+  const { data, isError, isLoading } = useQuery("getVideoData", apiTest, {
+    refetchOnWindowFocus: false,
   });
   console.log(data);
   // console.log(data?._count.likes);
@@ -63,7 +62,11 @@ export default function DetailPost({ videoDatas }: any) {
             <SubscribeBtn>구독</SubscribeBtn>
           </UserInfo>
           <SideBtnsWrap>
-            <LikeBtn likeCount={data?._count.likes} pageQuery={query?.id} />
+            <LikeBtn
+              likeCount={data?._count.likes}
+              pageQuery={query?.id}
+              videoState={data}
+            />
           </SideBtnsWrap>
           <Accordion baseImage={baseImage} videoState={data} />
         </>
