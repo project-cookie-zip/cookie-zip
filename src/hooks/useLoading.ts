@@ -1,5 +1,5 @@
 import Router from "next/router";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 // 만들어보긴 했지만, 데이터 로딩시간으로 인해
 // 현재로선 react query의 loading을 이용하는게 더 좋을 것 같음
