@@ -29,6 +29,11 @@ export default function DetailPost({ videoDatas }: any) {
 
   const baseImage: string = `https://source.boringavatars.com/beam/110/$${data?.user.id}?colors=DF9E75,A9653B,412513,412510,412500`;
 
+  const subsData = async () => {
+    const data = await axios.post(`/api/subscribe/${3}`);
+    console.log("신청완료");
+  };
+
   return (
     <Container>
       {isLoading ? (
@@ -59,7 +64,7 @@ export default function DetailPost({ videoDatas }: any) {
               <span>UserID에옹</span>
               <span>구독자수(10만)</span>
             </UsersData>
-            <SubscribeBtn>구독</SubscribeBtn>
+            <SubscribeBtn onClick={() => subsData()}>구독</SubscribeBtn>
           </UserInfo>
           <SideBtnsWrap>
             <LikeBtn
