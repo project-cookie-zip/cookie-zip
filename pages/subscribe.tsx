@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import axios from "axios";
-import { useMutation, useQuery } from "react-query";
 import { useState } from "react";
+import { useRouter } from "next/router";
+import { useMutation, useQuery } from "react-query";
+import { baseImageData } from "@utils/client/baseImage";
 import { SubsBtn } from "src/components/videos/video/SubsBtn";
 
 export default function Subscribe() {
@@ -17,27 +18,6 @@ export default function Subscribe() {
   const { data, isLoading, isError } = useQuery("myData", userData, {
     refetchOnWindowFocus: false,
   });
-
-  // random image data
-  const baseImage = (userId: number) => {
-    const baseImage: string = `https://source.boringavatars.com/beam/110/$${userId}?colors=DF9E75,A9653B,412513,412510,412500`;
-    return baseImage;
-  };
-
-  // useMutation
-  // const subscribeAPI = async () => {
-  //   const subsUpdate = await axios.post(
-  //     `/api/subscribe/${data[0]?.createdFor.id}`,
-  //   );
-  // };
-  // const subsMutation = useMutation(subscribeAPI);
-
-  // // subscribe active
-  // const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
-  // const subscribeBtn = async () => {
-  //   isSubscribed ? setIsSubscribed(false) : setIsSubscribed(true);
-  //   subsMutation.mutate();
-  // };
 
   return (
     <Conteiner>
@@ -57,7 +37,7 @@ export default function Subscribe() {
                     <Image
                       src={
                         item?.createdFor.avatar === null
-                          ? baseImage(item?.createdFor.id)
+                          ? baseImageData(item?.createdFor.id)
                           : item?.createdFor.avatar
                       }
                       alt="프로필"
@@ -67,9 +47,6 @@ export default function Subscribe() {
                     />
                     <span>{item?.createdFor.name}</span>
                   </CardUserInfo>
-                  {/* <button onClick={() => subscribeBtn()}>
-                    {isSubscribed ? "구독취소" : "구독"}
-                  </button> */}
                   <SubsBtn createdUserId={item?.createdFor.id} />
                 </CardBody>
               </>

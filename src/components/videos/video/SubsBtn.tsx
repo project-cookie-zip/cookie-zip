@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import axios from "axios";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
@@ -30,6 +30,7 @@ export const SubsBtn = ({ createdUserId }: any) => {
     });
   };
 
+  // subscribed boolean
   useEffect(() => {
     pathname.split("/")[1] === "subscribe" ? setIsSubscribed(true) : null;
   }, [pathname]);

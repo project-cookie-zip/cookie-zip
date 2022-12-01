@@ -2,15 +2,14 @@ import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
-import Router from "next/router";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Accordion } from "src/components/videos/video/Accordion";
 import { LikeBtn } from "src/components/videos/video/LikeBtn";
 import { SubsBtn } from "src/components/videos/video/SubsBtn";
 import { TimeToToday } from "@utils/client/timeToToday";
 import { LoadingSpinner } from "src/components/videos/video/LoadingSpinner";
+import { baseImageData } from "@utils/client/baseImage";
 
 export default function DetailPost({ videoDatas }: any) {
   const { query } = useRouter();
@@ -24,10 +23,11 @@ export default function DetailPost({ videoDatas }: any) {
   const { data, isError, isLoading } = useQuery("getVideoData", apiTest, {
     refetchOnWindowFocus: false,
   });
+  // 구독자수 처리 예정
+  // console.log("구독자수", data?.comments.length);
 
   // user base Image
-  const baseImage: string = `https://source.boringavatars.com/beam/110/$${data?.user.id}?colors=DF9E75,A9653B,412513,412510,412500`;
-
+  const baseImage = baseImageData(data?.user.id);
   return (
     <Container>
       {isLoading ? (
@@ -38,7 +38,7 @@ export default function DetailPost({ videoDatas }: any) {
             <VideoView src={data?.videoUrl} allow="fullscreen" />
           </VideoWrap>
           <ContentHeader>
-            <Title>제목</Title>
+            <Title>{data?.title}</Title>
             <SideInfo>
               <span>조회수 {data?.views}회</span>
               <span>{TimeToToday(new Date(data?.createdAt))}</span>
@@ -55,7 +55,7 @@ export default function DetailPost({ videoDatas }: any) {
                   unoptimized={true}
                 />
               </Link>
-              <span>UserID에옹</span>
+              <span className="userName">{data?.user.name}</span>
               <span>구독자수(10만)</span>
             </UsersData>
             <SubsBtn createdUserId={data?.user.id} />
@@ -68,6 +68,9 @@ export default function DetailPost({ videoDatas }: any) {
             />
           </SideBtnsWrap>
           <Accordion baseImage={baseImage} videoState={data} />
+          <ContentWrap>
+            <span>{data?.description}</span>
+          </ContentWrap>
         </>
       )}
     </Container>
@@ -143,49 +146,25 @@ const UsersData = styled.div`
     margin: 0 5px 0 5px;
     color: #929292;
   }
-`;
-
-const SubscribeBtn = styled.button`
-  /* padding: 5px;
-  margin-right: 20px;
-  border: none;
-  border-radius: 10px;
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
-  width: 60px;
-  height: 40px;
-  background-color: #df9e75; */
-
-  border: none;
-  border-radius: 5px;
-  width: 70px;
-  height: 30px;
-  color: white;
-  font-weight: bold;
-  background-color: #df9e75;
-  transition: 0.3s;
-  &:active {
-    background-color: #a9653b;
+  & .userName {
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
   }
-`;
-const subscribeCancle = styled.button`
-  padding: 5px;
-  margin-right: 20px;
-  border: none;
-  border-radius: 10px;
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
-  width: 60px;
-  height: 40px;
-  background-color: #df9e75;
 `;
 
 const SideBtnsWrap = styled.div`
   display: flex;
   align-items: center;
   width: 100vw;
+`;
+
+const ContentWrap = styled.div`
+  border-bottom: 1px solid #e5e8eb;
+  padding-bottom: 50px;
+  margin: 10px 0 100px 0;
+  max-width: 480px;
+  width: 95vw;
 `;
 
 const LikesBtns = styled.div`
