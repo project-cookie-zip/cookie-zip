@@ -1,10 +1,20 @@
 import styled from "styled-components";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import axios from "axios";
+import { useQuery } from "react-query";
 
 export default function Subscribe() {
   const router = useRouter();
   const baseImage: string = `https://source.boringavatars.com/beam/110/$1?colors=DF9E75,A9653B,412513,412510,412500`;
+
+  const userData = async () => {
+    const data = await axios.get(`/api/users/me`);
+    return data;
+  };
+
+  const { data, isLoading, isError } = useQuery("myData", userData);
+  console.log(data);
 
   return (
     <Conteiner>
