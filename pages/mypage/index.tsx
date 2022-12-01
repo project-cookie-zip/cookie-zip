@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { useEffect } from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
+import { baseImageData } from "@utils/client/baseImage";
+import Image from "next/image";
 
 export default function MyPage() {
   const getMyInfo = async () => {
@@ -17,14 +19,7 @@ export default function MyPage() {
   });
   console.log(data);
 
-  // const getMyInfo = async () => {
-  //   const { data } = await axios.get(`/api/users/me`);
-
-  // };
-
-  // useEffect(() => {
-  //   getMyInfo();
-  // }, []);
+  const baseImage = baseImageData(data?.id);
 
   return (
     <>
@@ -34,7 +29,13 @@ export default function MyPage() {
         <STMenu>채널정보</STMenu>
       </STTopBar>
       <STProfile>
-        <STChannelName>채널명</STChannelName>
+        <Image
+          src={data?.avatar ? data?.avatar : baseImage}
+          alt="프로필사진"
+          width={60}
+          height={60}
+          unoptimized={true}
+        />
         <span className="nickname">{data?.name}</span>
         <div>
           <span>구독자 10명 ∙ 동영상 10개</span>

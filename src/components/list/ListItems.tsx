@@ -1,8 +1,11 @@
 import Link from "next/link";
 import styled from "styled-components";
 import { TimeToToday } from "@utils/client/timeToToday";
+import Image from "next/image";
+import { baseImageData } from "@utils/client/baseImage";
 
 export const ListItems = ({ listdata }: any): JSX.Element => {
+  console.log("listdata", listdata);
   return (
     <>
       {listdata?.map((el: any) => (
@@ -13,7 +16,14 @@ export const ListItems = ({ listdata }: any): JSX.Element => {
             </STVideoBox>
           </Link>
           <STContentBox>
-            <STChannelName>{el?.userId}</STChannelName>
+            <Image
+              // src={el?.user.avatar ? el?.avatar : baseImageData(el.userId)}
+              src={baseImageData(el.userId)}
+              alt="프로필사진"
+              width={50}
+              height={50}
+              unoptimized={true}
+            />
             <STContent>
               <div>{el?.title}</div>
               <div>
@@ -59,6 +69,9 @@ const STContentBox = styled.div`
   & span {
     font-size: 13px;
     color: gray;
+  }
+  & img {
+    margin: 10px;
   }
 `;
 

@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import Image from "next/image";
+import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useIsLiked } from "src/hooks/getAPIs/useIsLiked";
 
 export const LikeBtn = ({ likeCount, pageQuery, videoState }: any) => {
