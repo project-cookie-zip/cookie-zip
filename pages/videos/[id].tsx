@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Accordion } from "src/components/videos/video/Accordion";
 import { LikeBtn } from "src/components/videos/video/LikeBtn";
+import { SubsBtn } from "src/components/videos/video/SubsBtn";
 import { TimeToToday } from "@utils/client/timeToToday";
 import { LoadingSpinner } from "src/components/videos/video/LoadingSpinner";
 
@@ -15,24 +16,17 @@ export default function DetailPost({ videoDatas }: any) {
   const { query } = useRouter();
   console.log("페이지 패스네임", query);
 
+  // video data fetch
   const apiTest = async () => {
     const data = await axios.get(`/api/videos/${query.id}`);
     return data?.data.video;
   };
-  // console.log("SSPdata", videoDatas);
-
   const { data, isError, isLoading } = useQuery("getVideoData", apiTest, {
     refetchOnWindowFocus: false,
   });
-  console.log(data);
-  // console.log(data?._count.likes);
 
+  // user base Image
   const baseImage: string = `https://source.boringavatars.com/beam/110/$${data?.user.id}?colors=DF9E75,A9653B,412513,412510,412500`;
-
-  const subsData = async () => {
-    const data = await axios.post(`/api/subscribe/${3}`);
-    console.log("신청완료");
-  };
 
   return (
     <Container>
@@ -64,7 +58,7 @@ export default function DetailPost({ videoDatas }: any) {
               <span>UserID에옹</span>
               <span>구독자수(10만)</span>
             </UsersData>
-            <SubscribeBtn onClick={() => subsData()}>구독</SubscribeBtn>
+            <SubsBtn createdUserId={data?.user.id} />
           </UserInfo>
           <SideBtnsWrap>
             <LikeBtn
@@ -152,7 +146,7 @@ const UsersData = styled.div`
 `;
 
 const SubscribeBtn = styled.button`
-  padding: 5px;
+  /* padding: 5px;
   margin-right: 20px;
   border: none;
   border-radius: 10px;
@@ -161,7 +155,19 @@ const SubscribeBtn = styled.button`
   font-size: 16px;
   width: 60px;
   height: 40px;
+  background-color: #df9e75; */
+
+  border: none;
+  border-radius: 5px;
+  width: 70px;
+  height: 30px;
+  color: white;
+  font-weight: bold;
   background-color: #df9e75;
+  transition: 0.3s;
+  &:active {
+    background-color: #a9653b;
+  }
 `;
 const subscribeCancle = styled.button`
   padding: 5px;

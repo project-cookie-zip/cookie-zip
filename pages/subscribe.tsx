@@ -2,19 +2,42 @@ import styled from "styled-components";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
+import { useState } from "react";
+import { SubsBtn } from "src/components/videos/video/SubsBtn";
 
 export default function Subscribe() {
   const router = useRouter();
-  const baseImage: string = `https://source.boringavatars.com/beam/110/$1?colors=DF9E75,A9653B,412513,412510,412500`;
 
+  // subscribe data
   const userData = async () => {
     const data = await axios.get(`/api/users/me`);
-    return data;
+    return data?.data.subscribeList;
+  };
+  const { data, isLoading, isError } = useQuery("myData", userData, {
+    refetchOnWindowFocus: false,
+  });
+
+  // random image data
+  const baseImage = (userId: number) => {
+    const baseImage: string = `https://source.boringavatars.com/beam/110/$${userId}?colors=DF9E75,A9653B,412513,412510,412500`;
+    return baseImage;
   };
 
-  const { data, isLoading, isError } = useQuery("myData", userData);
-  console.log(data);
+  // useMutation
+  // const subscribeAPI = async () => {
+  //   const subsUpdate = await axios.post(
+  //     `/api/subscribe/${data[0]?.createdFor.id}`,
+  //   );
+  // };
+  // const subsMutation = useMutation(subscribeAPI);
+
+  // // subscribe active
+  // const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
+  // const subscribeBtn = async () => {
+  //   isSubscribed ? setIsSubscribed(false) : setIsSubscribed(true);
+  //   subsMutation.mutate();
+  // };
 
   return (
     <Conteiner>
@@ -23,84 +46,36 @@ export default function Subscribe() {
         <span>{"←"}</span>
       </CancelBar>
       <CardBox>
-        <CardBody>
-          <CardUserInfo>
-            <Image
-              src={baseImage}
-              alt="프로필"
-              width={60}
-              height={60}
-              unoptimized={true}
-            />
-            <span>닉네임</span>
-          </CardUserInfo>
-          <button>구독취소</button>
-        </CardBody>
-        <CardBody>
-          <CardUserInfo>
-            <Image
-              src={baseImage}
-              alt="프로필"
-              width={60}
-              height={60}
-              unoptimized={true}
-            />
-            <span>닉네임</span>
-          </CardUserInfo>
-          <button>구독취소</button>
-        </CardBody>
-        <CardBody>
-          <CardUserInfo>
-            <Image
-              src={baseImage}
-              alt="프로필"
-              width={60}
-              height={60}
-              unoptimized={true}
-            />
-            <span>닉네임</span>
-          </CardUserInfo>
-          <button>구독취소</button>
-        </CardBody>
-        <CardBody>
-          <CardUserInfo>
-            <Image
-              src={baseImage}
-              alt="프로필"
-              width={60}
-              height={60}
-              unoptimized={true}
-            />
-            <span>닉네임</span>
-          </CardUserInfo>
-          <button>구독취소</button>
-        </CardBody>
-        <CardBody>
-          <CardUserInfo>
-            <Image
-              src={baseImage}
-              alt="프로필"
-              width={60}
-              height={60}
-              unoptimized={true}
-            />
-            <span>닉네임</span>
-          </CardUserInfo>
-          <button>구독취소</button>
-        </CardBody>
-        <CardBody>
-          <CardUserInfo>
-            <Image
-              src={baseImage}
-              alt="프로필"
-              width={60}
-              height={60}
-              unoptimized={true}
-            />
-            <span>닉네임</span>
-          </CardUserInfo>
-          <button>구독취소</button>
-        </CardBody>
+        {data?.length === 0 ? (
+          <div>구독 정보가 없네요</div>
+        ) : (
+          data?.map((item: any, index: number) => {
+            return (
+              <>
+                <CardBody key={item?.createdFor.id}>
+                  <CardUserInfo>
+                    <Image
+                      src={
+                        item?.createdFor.avatar === null
+                          ? baseImage(item?.createdFor.id)
+                          : item?.createdFor.avatar
+                      }
+                      alt="프로필"
+                      width={60}
+                      height={60}
+                      unoptimized={true}
+                    />
+                    <span>{item?.createdFor.name}</span>
+                  </CardUserInfo>
+                  {/* <button onClick={() => subscribeBtn()}>
+                    {isSubscribed ? "구독취소" : "구독"}
+                  </button> */}
+                  <SubsBtn createdUserId={item?.createdFor.id} />
+                </CardBody>
+              </>
+            );
+          })
+        )}
       </CardBox>
     </Conteiner>
   );
