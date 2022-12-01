@@ -1,7 +1,31 @@
 import { List } from "src/components/list/List";
 import styled from "styled-components";
+import { useEffect } from "react";
+import axios from "axios";
+import { useQuery } from "react-query";
 
 export default function MyPage() {
+  const getMyInfo = async () => {
+    const { data } = await axios.get(`/api/users/me`);
+    console.log(data);
+    return data?.profile;
+  };
+
+  const { data } = useQuery({
+    queryKey: ["getMyInfo"],
+    queryFn: getMyInfo,
+  });
+  console.log(data);
+
+  // const getMyInfo = async () => {
+  //   const { data } = await axios.get(`/api/users/me`);
+
+  // };
+
+  // useEffect(() => {
+  //   getMyInfo();
+  // }, []);
+
   return (
     <>
       <STTopBar>
@@ -11,7 +35,7 @@ export default function MyPage() {
       </STTopBar>
       <STProfile>
         <STChannelName>채널명</STChannelName>
-        <span className="nickname">cookiezip</span>
+        <span className="nickname">{data?.name}</span>
         <div>
           <span>구독자 10명 ∙ 동영상 10개</span>
         </div>
