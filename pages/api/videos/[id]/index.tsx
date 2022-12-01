@@ -62,6 +62,15 @@ async function handler(
     }),
   );
 
+  const isSubscribe = Boolean(
+    await client.subscribe.findFirst({
+      where: { createdById: user?.id, createdForId: video?.user?.id },
+      select: {
+        id: true,
+      },
+    }),
+  );
+
   await client.video.update({
     where: {
       id: Number(video?.id),
@@ -78,6 +87,7 @@ async function handler(
     ok: true,
     video,
     isLike,
+    isSubscribe,
   });
 }
 
