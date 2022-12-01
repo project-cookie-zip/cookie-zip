@@ -14,6 +14,7 @@ async function handler(
         email: true,
         avatar: true,
         name: true,
+        sendSubscribes: true,
       },
     });
     res.json({
