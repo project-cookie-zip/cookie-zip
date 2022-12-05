@@ -1,9 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Dongle&family=Gamja+Flower&family=IBM+Plex+Sans+KR:wght@500&family=Jua&display=swap");
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  /* font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; */
+  /* font-family: "Jua", sans-serif; */
+  /* font-family: "Dongle", sans-serif; */
+  /* font-family: "Gamja Flower", cursive; */
+  font-family: "IBM Plex Sans KR", sans-serif;
 }
 
 /* a {

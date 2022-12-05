@@ -36,6 +36,11 @@ async function handler(
           },
         },
       },
+      likes: {
+        select: {
+          userId: true,
+        },
+      },
       _count: {
         select: {
           comments: true,
@@ -44,6 +49,27 @@ async function handler(
       },
     },
   });
+
+  const isLike = Boolean(
+    await client.like.findFirst({
+      where: {
+        videoId: Number(id),
+        userId: user?.id,
+      },
+      select: {
+        id: true,
+      },
+    }),
+  );
+
+  const isSubscribe = Boolean(
+    await client.subscribe.findFirst({
+      where: { createdById: user?.id, createdForId: video?.user?.id },
+      select: {
+        id: true,
+      },
+    }),
+  );
 
   await client.video.update({
     where: {
@@ -60,6 +86,8 @@ async function handler(
   res.json({
     ok: true,
     video,
+    isLike,
+    isSubscribe,
   });
 }
 

@@ -64,19 +64,19 @@ export default function AddPost() {
   // category value
   const [category, setCategory] = useState("");
 
-  // form data //
-  interface sendData {
-    title: string;
-    description: string;
-    category: string;
-    // video: string | ArrayBuffer | null | Blob;
-  }
-  let sendData = {
-    title: title,
-    content: content,
-    category: category,
-    // video: mediaSend,
-  };
+  // form data // 클라우드 플레어 특성상 해당 코드는 미사용
+  // interface sendData {
+  //   title: string;
+  //   description: string;
+  //   category: string;
+  //   // video: string | ArrayBuffer | null | Blob;
+  // }
+  // let sendData = {
+  //   title: title,
+  //   content: content,
+  //   category: category,
+  //   // video: mediaSend,
+  // };
 
   const addVideo = async () => {
     if (title === "") {
@@ -146,7 +146,6 @@ export default function AddPost() {
           type="file"
           accept="video/mp4,video/mkv, video/x-m4v,video/*"
           onChange={(e: any) => {
-            // React.event -- type 공부예정
             uploadFile(e.target.files[0]);
           }}
         />
@@ -216,7 +215,7 @@ export default function AddPost() {
 
 const FormContainer = styled.form`
   margin: 0 auto;
-  margin-top: 30px;
+  margin-top: 55px;
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -11,14 +11,32 @@ async function handler(
     const profile = await client.user.findUnique({
       where: { id: req.session.user?.id },
       select: {
+        id: true,
         email: true,
         avatar: true,
         name: true,
       },
     });
+    const subscribeList = await client.subscribe.findMany({
+      where: {
+        createdById: profile?.id,
+      },
+      select: {
+        createdFor: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            avatar: true,
+          },
+        },
+      },
+    });
+
     res.json({
       ok: true,
       profile,
+      subscribeList,
     });
   }
   if (req.method === "POST") {
