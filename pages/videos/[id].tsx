@@ -23,6 +23,7 @@ export default function DetailPost({ videoDatas }: any) {
   const { data, isError, isLoading } = useQuery("getVideoData", apiTest, {
     refetchOnWindowFocus: false,
   });
+  console.log(data);
   // 구독자수 처리 예정
   // console.log("구독자수", data?.comments.length);
 

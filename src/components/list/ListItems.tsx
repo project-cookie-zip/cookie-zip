@@ -1,24 +1,42 @@
+import Link from "next/link";
 import styled from "styled-components";
+import { TimeToToday } from "@utils/client/timeToToday";
+import Image from "next/image";
+import { baseImageData } from "@utils/client/baseImage";
 
-export const ListItems = () => {
+export const ListItems = ({ listdata }: any): JSX.Element => {
+  console.log("listdata", listdata);
   return (
-    <STContainer>
-      <STVideoBox>
-        <STImage
-          src="https://i.ytimg.com/vi/xg7yuvI0iTw/hqdefault.jpg?sqp=-oaymwE2CNACELwBSFXyq4qpAygIARUAAIhCGAFwAcABBvABAfgB_gmAAtAFigIMCAAQARhlIE0oSTAP&rs=AOn4CLC7pdHY8BpWntmg15mfwdVSKeRmoQ"
-          alt="썸네일"
-        />
-      </STVideoBox>
-      <STContentBox>
-        <STChannelName>채널명</STChannelName>
-        <STContent>
-          <div>영상제목입니다아아아아아아</div>
-          <div>
-            <span>작성자 ∙ 조회수 12만회 ∙ N일전</span>
-          </div>
-        </STContent>
-      </STContentBox>
-    </STContainer>
+    <>
+      {listdata?.map((el: any) => (
+        <STContainer key={el.id}>
+          <Link href={`/videos/${el.id}`}>
+            <STVideoBox>
+              <STImage src={el?.thumbnailUrl} alt="썸네일" />
+            </STVideoBox>
+          </Link>
+          <STContentBox>
+            <Image
+              // src={el?.user.avatar ? el?.avatar : baseImageData(el.userId)}
+              src={baseImageData(el.userId)}
+              alt="프로필사진"
+              width={50}
+              height={50}
+              unoptimized={true}
+            />
+            <STContent>
+              <div>{el?.title}</div>
+              <div>
+                <span>
+                  {el?.userId} ∙ 조회수 {el?.views} ∙{" "}
+                  {TimeToToday(new Date(el?.createdAt))}
+                </span>
+              </div>
+            </STContent>
+          </STContentBox>
+        </STContainer>
+      ))}
+    </>
   );
 };
 
@@ -51,6 +69,9 @@ const STContentBox = styled.div`
   & span {
     font-size: 13px;
     color: gray;
+  }
+  & img {
+    margin: 10px;
   }
 `;
 
