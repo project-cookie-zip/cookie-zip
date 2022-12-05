@@ -19,7 +19,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
         <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-          <ReactQueryDevtools initialIsOpen={true} />
+          {/* <ReactQueryDevtools initialIsOpen={true} /> */}
           <Layout>
             {isLoading ? <LoadingSpinner /> : null}
             <Component {...pageProps} />

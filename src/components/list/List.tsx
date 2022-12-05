@@ -2,24 +2,24 @@ import { ListItems } from "./ListItems";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useQuery } from "react-query";
 
 export const List = () => {
-  const [videoList, setVideoList] = useState();
-
-  const getVideo = async () => {
+  const getVideos = async () => {
     const { data } = await axios.get(`/api/videos`);
-
-    console.log(data);
+    return data?.videos;
   };
-  useEffect(() => {
-    getVideo();
-  }, []);
+
+  const { data } = useQuery({
+    queryKey: ["getVideos"],
+    queryFn: getVideos,
+  });
+
+  // console.log("data", data);
 
   return (
     <STListContainer>
-      <ListItems />
-      <ListItems />
-      <ListItems />
+      <ListItems listdata={data} />
     </STListContainer>
   );
 };
