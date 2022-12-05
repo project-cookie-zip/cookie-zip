@@ -56,7 +56,6 @@ export const LikeBtn = ({ likeCount, pageQuery, videoState }: any) => {
   // likes
   const [optiCount, setOptiCount] = useState<number>(likeCount);
   const likeUp = () => {
-    console.log("좋아용");
     if (isLiked) {
       setisLiked(false);
       setOptiCount(optiCount - 1);
@@ -64,7 +63,6 @@ export const LikeBtn = ({ likeCount, pageQuery, videoState }: any) => {
       setisLiked(true);
       setOptiCount(optiCount + 1);
     }
-    // mutation.mutate();
     likeMutation.mutate();
   };
 
@@ -95,8 +93,6 @@ const LikesBtns = styled.div`
     border: none;
     background: none;
     border-radius: 15px;
-    /* width: 40px;
-    height: 40px; */
 
     &:active {
       background-color: #ececec;

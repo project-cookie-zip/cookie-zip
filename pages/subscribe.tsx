@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import Image from "next/image";
 import axios from "axios";
-import { useState } from "react";
+import uuid from "react-uuid";
 import { useRouter } from "next/router";
-import { useMutation, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import { baseImageData } from "@utils/client/baseImage";
 import { SubsBtn } from "src/components/videos/video/SubsBtn";
 
@@ -15,7 +15,7 @@ export default function Subscribe() {
     const data = await axios.get(`/api/users/me`);
     return data?.data.subscribeList;
   };
-  const { data, isLoading, isError } = useQuery("myData", userData, {
+  const { data } = useQuery("myData", userData, {
     refetchOnWindowFocus: false,
   });
 
@@ -29,10 +29,10 @@ export default function Subscribe() {
         {data?.length === 0 ? (
           <div>구독 정보가 없네요</div>
         ) : (
-          data?.map((item: any, index: number) => {
+          data?.map((item: any) => {
             return (
               <>
-                <CardBody key={item?.createdFor.id}>
+                <CardBody key={uuid()}>
                   <CardUserInfo>
                     <Image
                       src={

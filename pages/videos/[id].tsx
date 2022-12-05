@@ -167,22 +167,6 @@ const ContentWrap = styled.div`
   width: 95vw;
 `;
 
-const LikesBtns = styled.div`
-  padding: 10px;
-
-  & button {
-    border: none;
-    background: none;
-    border-radius: 15px;
-    /* width: 40px;
-    height: 40px; */
-
-    &:active {
-      background-color: #ececec;
-    }
-  }
-`;
-
 // SSP -- 데이터 URL은 맞으나 plz login err 발생(post man도 동일)
 // react query로 처리 예정
 // SSP 사용 자제 예정
