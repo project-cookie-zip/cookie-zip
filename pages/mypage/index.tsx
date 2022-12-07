@@ -39,32 +39,34 @@ export default function MyPage() {
     } = await axios.get("/api/image");
     // console.log(data);
     // console.log(uploadURL, id);
-    const data1 = await axios
-      .post(uploadURL, formData)
-      .then(res => console.log(res));
-    console.log("data1", data1);
+    const {
+      data: {
+        result: { variants },
+      },
+    } = await axios.post(uploadURL, formData);
 
-    const data = await (
-      await fetch(
-        // `https://api.cloudflare.com/client/v4/accounts/e564ea5cae1cb0fb8004a589abe35f63/stream/${id}`,
-        // `https://api.cloudflare.com/cdn-cgi/imagedelivery/e564ea5cae1cb0fb8004a589abe35f63/${id}/public`,
-        `https://api.cloudflare.com/client/v4/accounts/e564ea5cae1cb0fb8004a589abe35f63/images/v2/${id}`,
-        {
-          // method: "GET",
-          headers: {
-            Authorization: `Bearer 2PptoKx0NQLjSOoPxLgePH2I6GztAIx1p-hKv6Z0`,
-            "Content-Type": "application/json",
-          },
-        },
-      )
-    ).json();
-    console.log(data);
-    // await axios.post("/api/videos", {
-    //   title,
-    //   description: content,
-    //   videoUrl: preview,
-    //   thumbnailUrl: thumbnail,
-    // });
+    // console.log("data1", data1);
+
+    // const data = await (
+    //   await fetch(
+    //     // `https://api.cloudflare.com/client/v4/accounts/e564ea5cae1cb0fb8004a589abe35f63/stream/${id}`,
+    //     // `https://api.cloudflare.com/cdn-cgi/imagedelivery/e564ea5cae1cb0fb8004a589abe35f63/${id}/public`,
+    //     `https://api.cloudflare.com/client/v4/accounts/e564ea5cae1cb0fb8004a589abe35f63/images/v1/${id}`,
+    //     {
+    //       method: "GET",
+    //       headers: {
+    //         Authorization: `Bearer 2PptoKx0NQLjSOoPxLgePH2I6GztAIx1p-hKv6Z0`,
+    //         "Content-Type": "application/json",
+    //       },
+    //     },
+    //   )
+    // ).json();
+    // console.log(data);
+    await axios.post("/api/users/me", {
+      // email,
+      avatar: variants[1],
+      // nickname,
+    });
   };
 
   return (
