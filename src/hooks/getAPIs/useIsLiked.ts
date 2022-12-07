@@ -9,7 +9,7 @@ export const useIsLiked = () => {
     const data = await axios
       .get(`/api/videos/${query.id}`)
       .then(res => {
-        console.log(res.data.isLike);
+        // console.log(res.data.isLike);
         setIsLiked(res.data.isLike);
       })
       .catch(err => {

@@ -8,7 +8,8 @@ import { useEffect, useState } from "react";
 // ㄴ=== query의 isloading이 console에 더 일찍 찍힘
 // 해당 코드는 _app.tsx에만 적용하는 것이 좋을 것 같음
 // (페이지 이동 시 next 특성-페이지를 다 받고난 뒤 불러오기-을 처리해주기 위해)
-// 적용 결과: 훨씬 부드럽게 로딩으로 넘어가는 것이 체감됨
+// 적용 결과: 기존 화면이 유지된채로 로딩스피너 실행 -> 페이지 렌더링 후 다음페이지로 전환
+// 전반적으로 더 자연스러움.
 export const useLoading = () => {
   const [nowLoading, setNowLoading] = useState<boolean>(false);
   useEffect(() => {

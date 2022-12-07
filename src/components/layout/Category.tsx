@@ -19,6 +19,13 @@ export default function Category() {
         <button>음악</button>
         <button>요리</button>
         <button>쇼핑</button>
+        {/* 카테고리 총목
+        <button>스포츠</button>
+        <button>동물</button>
+        <button>연예</button>
+        <button>뷰티</button>
+        <button>영화</button>
+        <button>먹방</button> */}
       </Categorys>
     </CategoryWrap>
   );
