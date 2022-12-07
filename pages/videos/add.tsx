@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
-import Link from "next/link";
 import Swal from "sweetalert2";
 import axios from "axios";
+import Router from "next/router";
+import { LoadingSpinner } from "src/components/videos/video/LoadingSpinner";
 
 export default function AddPost() {
   // 동영상 처리
@@ -12,7 +13,7 @@ export default function AddPost() {
   const [testSend, setTestSend] = useState("");
 
   const uploadFile = (file: any) => {
-    console.log(file);
+    // console.log(file);
     setTestSend(file);
     let maxSize = 200 * 1024 * 1024;
     let fileSize = file.size;
@@ -64,22 +65,67 @@ export default function AddPost() {
   // category value
   const [category, setCategory] = useState("");
 
-  // form data // 클라우드 플레어 특성상 해당 코드는 미사용
+  // // form data // 클라우드 플레어 특성상 해당 코드는 미사용
   // interface sendData {
   //   title: string;
   //   description: string;
   //   category: string;
   //   // video: string | ArrayBuffer | null | Blob;
   // }
-  // let sendData = {
+  // let sendData: sendData = {
   //   title: title,
-  //   content: content,
+  //   description: content,
   //   category: category,
   //   // video: mediaSend,
   // };
 
+  const videoPostApi = async () => {
+    let formData = new FormData();
+    formData.append("file", testSend);
+    const {
+      data: { uploadURL, uid },
+    } = await axios.get("/api/video");
+    console.log(uploadURL, uid);
+    await axios.post(uploadURL, formData).then(res => console.log(res));
+
+    const {
+      result: { thumbnail, preview },
+    } = await (
+      await fetch(
+        `https://api.cloudflare.com/client/v4/accounts/${process.env.NEXT_PUBLIC_CLOUDFLARE_CLIENT_ID}/stream/${uid}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_CLOUDFLARE_API_TOKEN}`,
+            "Content-Type": "application/json",
+          },
+        },
+      )
+    ).json();
+
+    await axios.post("/api/videos", {
+      title,
+      description: content,
+      videoUrl: preview,
+      thumbnailUrl: thumbnail,
+    });
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "success",
+      title: "저장 완료!",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+    });
+    Router.push("/");
+  };
+
+  // isLoading
+  const [nowUploading, setNowUploading] = useState(false);
+
   const addVideo = async () => {
-    if (title === "") {
+    if (title === "" || testSend === "" || content === "") {
       Swal.fire({
         title: "글을 확인해주세요ㅠㅠ",
         icon: "warning",
@@ -90,40 +136,41 @@ export default function AddPost() {
         }
       });
     } else {
-      let formData = new FormData();
-      formData.append("file", testSend);
-      const {
-        data: { uploadURL, uid },
-      } = await axios.get("/api/video");
-      console.log(uploadURL, uid);
-      await axios.post(uploadURL, formData).then(res => console.log(res));
-
-      const {
-        result: { thumbnail, preview },
-      } = await (
-        await fetch(
-          `https://api.cloudflare.com/client/v4/accounts/e564ea5cae1cb0fb8004a589abe35f63/stream/${uid}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer 2PptoKx0NQLjSOoPxLgePH2I6GztAIx1p-hKv6Z0`,
-              "Content-Type": "application/json",
-            },
-          },
-        )
-      ).json();
-
-      await axios.post("/api/videos", {
-        title,
-        description: content,
-        videoUrl: preview,
-        thumbnailUrl: thumbnail,
+      Swal.fire({
+        title: "저장할까요?",
+        icon: "question",
+        confirmButtonColor: "#A9653B",
+        confirmButtonText: "넹",
+      }).then(result => {
+        if (result.value) {
+          setNowUploading(true);
+          videoPostApi();
+        }
+        setNowUploading(false);
       });
     }
   };
 
+  const cancleVideo = () => {
+    Swal.fire({
+      title: "정말 취소할까요?",
+      icon: "warning",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#A9653B",
+      confirmButtonText: "취소할래요",
+      cancelButtonColor: "#d4b29e",
+      cancelButtonText: "마저 작성할게요",
+    }).then(result => {
+      if (result.value) {
+        Router.push("/");
+      }
+    });
+  };
+
   return (
     <FormContainer>
+      {nowUploading ? <LoadingSpinner /> : null}
       <VideoWrap>
         <VideoView
           style={mediaView === "" ? { display: "none" } : { display: "block" }}
@@ -203,11 +250,9 @@ export default function AddPost() {
         <button onClick={addVideo} type="button">
           업로드
         </button>
-        <Link href={"/"}>
-          <button className="cancel" type="button">
-            취소
-          </button>
-        </Link>
+        <button className="cancel" type="button" onClick={cancleVideo}>
+          취소
+        </button>
       </ButtonWrap>
     </FormContainer>
   );
@@ -268,6 +313,8 @@ const CancelBtn = styled.button`
   border-radius: 5px;
   width: 60px;
   height: 30px;
+  color: white;
+  font-weight: bold;
   background-color: #a9653b;
   position: relative;
   left: 35vw;
@@ -333,6 +380,10 @@ const CateSelect = styled.select`
   text-align: center;
   border: 1px solid #a9653b;
   border-radius: 5px;
+  font-weight: bold;
+  & option {
+    font-weight: bold;
+  }
 `;
 
 const ButtonWrap = styled.div`
@@ -342,11 +393,15 @@ const ButtonWrap = styled.div`
     border-radius: 5px;
     width: 60px;
     height: 30px;
+    font-weight: bold;
     background-color: #a9653b;
     transition: 0.3s;
     &:active {
       background-color: #df9e75;
     }
+  }
+  & button:first-child {
+    color: white;
   }
   & .cancel {
     background-color: transparent;

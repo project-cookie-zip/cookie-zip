@@ -2,10 +2,13 @@ import Image from "next/image";
 import styled from "styled-components";
 import Link from "next/link";
 import { useLoginCheck } from "src/hooks/useLoginCheck";
+import { baseImageData } from "@utils/client/baseImage";
+import { useMyData } from "src/hooks/getAPIs/useMyData";
 
 export const Header = () => {
-  const isLogin = useLoginCheck();
+  const isLogin: boolean = useLoginCheck();
 
+  const { data } = useMyData();
   return (
     <Container>
       <Logo>
@@ -15,10 +18,21 @@ export const Header = () => {
       </Logo>
       {isLogin ? (
         <TopNav>
-          <Image src={require("../../images/cookieAlert.png")} alt="알림" />
           <Image src={require("../../images/cookieSearch.png")} alt="검색" />
+          <Image src={require("../../images/cookieAlert.png")} alt="알림" />
           <Link href={"/mypage"}>
-            <Image src={require("../../images/cookieAva.png")} alt="프로필" />
+            {/* <Image src={require("../../images/cookieAva.png")} alt="프로필" /> */}
+            <Image
+              src={
+                data?.profile.avatar
+                  ? data?.profile.avatar
+                  : baseImageData(data?.profile.id)
+              }
+              alt="프로필사진"
+              width={30}
+              height={30}
+              unoptimized={true}
+            />
           </Link>
         </TopNav>
       ) : (
