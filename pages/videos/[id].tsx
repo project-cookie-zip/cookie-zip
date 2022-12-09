@@ -13,22 +13,24 @@ import { baseImageData } from "@utils/client/baseImage";
 
 export default function DetailPost({ videoDatas }: any) {
   const { query } = useRouter();
-  console.log("페이지 패스네임", query);
 
   // video data fetch
-  const apiTest = async () => {
-    const data = await axios.get(`/api/videos/${query.id}`);
-    return data?.data.video;
-  };
-  const { data, isError, isLoading } = useQuery("getVideoData", apiTest, {
-    refetchOnWindowFocus: false,
-  });
-  console.log(data);
+  // const apiTest = async () => {
+  //   const data = await axios.get(`/api/videos/${query.id}`);
+  //   return data?.data.video;
+  // };
+  // const { data, isError, isLoading } = useQuery("getVideoData", apiTest, {
+  //   refetchOnWindowFocus: false,
+  // });
+
+  // SSP 적용으로 react query가 불필요해짐에 따라 임시 로딩 불리언 추가
+  const isLoading: boolean = false;
+
   // 구독자수 처리 예정
   // console.log("구독자수", data?.comments.length);
 
   // user base Image
-  const baseImage = baseImageData(data?.user.id);
+  const baseImage = baseImageData(videoDatas?.user.id);
   return (
     <Container>
       {isLoading ? (
@@ -36,41 +38,45 @@ export default function DetailPost({ videoDatas }: any) {
       ) : (
         <>
           <VideoWrap>
-            <VideoView src={data?.videoUrl} allow="fullscreen" />
+            <VideoView src={videoDatas?.videoUrl} allow="fullscreen" />
           </VideoWrap>
           <ContentHeader>
-            <Title>{data?.title}</Title>
+            <Title>{videoDatas?.title}</Title>
             <SideInfo>
-              <span>조회수 {data?.views}회</span>
-              <span>{TimeToToday(new Date(data?.createdAt))}</span>
+              <span>조회수 {videoDatas?.views}회</span>
+              <span>{TimeToToday(new Date(videoDatas?.createdAt))}</span>
             </SideInfo>
           </ContentHeader>
           <UserInfo>
             <UsersData>
               <Link href={"/"}>
                 <Image
-                  src={data?.user.avatar ? data?.user.avatar : baseImage}
+                  src={
+                    videoDatas?.user.avatar
+                      ? videoDatas?.user.avatar
+                      : baseImage
+                  }
                   alt="프로필사진"
                   width={60}
                   height={60}
                   unoptimized={true}
                 />
               </Link>
-              <span className="userName">{data?.user.name}</span>
+              <span className="userName">{videoDatas?.user.name}</span>
               <span>구독자수(10만)</span>
             </UsersData>
-            <SubsBtn createdUserId={data?.user.id} />
+            <SubsBtn createdUserId={videoDatas?.user.id} />
           </UserInfo>
           <SideBtnsWrap>
             <LikeBtn
-              likeCount={data?._count.likes}
+              likeCount={videoDatas?._count.likes}
               pageQuery={query?.id}
-              videoState={data}
+              videoState={videoDatas}
             />
           </SideBtnsWrap>
-          <Accordion baseImage={baseImage} videoState={data} />
+          <Accordion baseImage={baseImage} videoState={videoDatas} />
           <ContentWrap>
-            <span>{data?.description}</span>
+            <span>{videoDatas?.description}</span>
           </ContentWrap>
         </>
       )}
@@ -169,33 +175,39 @@ const ContentWrap = styled.div`
 `;
 
 // SSP -- 데이터 URL은 맞으나 plz login err 발생(post man도 동일)
-// react query로 처리 예정
-// SSP 사용 자제 예정
-// import fetch from "isomorphic-unfetch";
-// import { prisma } from "@prisma/client";
+// 에러 해결 완료 - headers의 Cookie data로 처리
+
+import fetch from "isomorphic-unfetch";
+import video from "pages/api/video";
+
 export const getServerSideProps = async (context: any) => {
   try {
-    const { req } = context;
-    // console.log("reqTTest", req);
-    console.log("컨텍스트 무수한데이터", context);
-    let pathname = req.url
-      .split("/")
-      [req.url.split("/").length - 1].split(".")[0];
-    console.log("hello pathname", pathname);
-    const res = await axios.get(`localhost:3000/api/videos/${pathname}`);
-    const videoDatas = res.data;
-    // const videoDatas = req;
-    console.log("ttest", videoDatas);
+    const { req, query } = context;
+    console.log("hello query", query);
 
-    // const videoDatas = { pathname: "something" };
+    const videos: any = await (
+      await fetch(
+        `${process.env.LOCAL_BASE_URL}/api/videos/${query.id}`,
+        // `http://localhost:3000/api/videos`,
+        {
+          headers: {
+            // Authorization: "Bearer 2PptoKx0NQLjSOoPxLgePH2I6GztAIx1p-hKv6Z0",
+            // "Content-Type": "application/json",
 
+            // SSP 작업 시 참고 *
+            // 현재 요청 시 plz log in error가 발생하여
+            // Cookie 값을 임의로 넣어주고 있습니다.
+            Cookie: process.env.GET_API_HEADERS_COOKIE,
+          },
+        },
+      )
+    ).json();
+    const videoDatas = videos.video;
     return {
-      props: {
-        videoDatas,
-      },
+      props: { videoDatas },
     };
   } catch (error) {
-    const videoDatas = { success: false };
+    const videoDatas = { error: error };
     console.log(error);
     return {
       props: {

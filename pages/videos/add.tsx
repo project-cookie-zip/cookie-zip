@@ -92,11 +92,11 @@ export default function AddPost() {
       result: { thumbnail, preview },
     } = await (
       await fetch(
-        `https://api.cloudflare.com/client/v4/accounts/e564ea5cae1cb0fb8004a589abe35f63/stream/${uid}`,
+        `https://api.cloudflare.com/client/v4/accounts/${process.env.NEXT_PUBLIC_CLOUDFLARE_CLIENT_ID}/stream/${uid}`,
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer 2PptoKx0NQLjSOoPxLgePH2I6GztAIx1p-hKv6Z0`,
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_CLOUDFLARE_API_TOKEN}`,
             "Content-Type": "application/json",
           },
         },
