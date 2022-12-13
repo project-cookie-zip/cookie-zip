@@ -8,8 +8,12 @@ import Image from "next/image";
 import { useState } from "react";
 import Router from "next/router";
 import Swal from "sweetalert2";
+import { MyVideoList } from "src/components/mypage/MyVideoList";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function MyPage() {
+  const router = useRouter();
   const getMyInfo = async () => {
     const { data } = await axios.get(`/api/users/me`);
     console.log(data);
@@ -148,12 +152,23 @@ export default function MyPage() {
       </STModalBackground>
     );
   };
+  //좋아요
+  const [likeMode, setLikeMode] = useState(false);
+  const likeHandler = () => {
+    setLikeMode(!likeMode);
+  };
 
   return (
     <>
       <STTopBar>
-        <STMenu>홈</STMenu>
-        <STMenu>좋아요</STMenu>
+        <STMenu
+          onClick={() => {
+            router.push("/mypage");
+          }}
+        >
+          홈
+        </STMenu>
+        <STMenu onClick={likeHandler}>좋아요</STMenu>
         <STMenu>채널정보</STMenu>
       </STTopBar>
       <STProfile>
@@ -187,7 +202,7 @@ export default function MyPage() {
           <span>구독자 10명 ∙ 동영상 10개</span>
         </div>
       </STProfile>
-      <List />
+      <MyVideoList myInfo={data} />
     </>
   );
 }
@@ -210,7 +225,7 @@ const STProfile = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 10px;
+  padding-top: 30px;
   & div {
   }
   .nickname {
