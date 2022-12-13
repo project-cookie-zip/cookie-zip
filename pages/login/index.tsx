@@ -12,8 +12,8 @@ export default function Login() {
     handleSubmit, // 제출
     watch, // 현재 상태 볼 수있음
     formState: { errors },
-  } = useForm();
-  const onSubmit: SubmitHandler<ILoginInputs> = async data => {
+  } = useForm<ILoginInputs>();
+  const onSubmit = async (data: ILoginInputs) => {
     const response = await fetch("/api/users/login", {
       method: "POST",
       body: JSON.stringify(data),

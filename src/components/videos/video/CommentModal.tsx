@@ -1,24 +1,30 @@
 import styled from "styled-components";
 import Image from "next/image";
 import { QueryClient, useMutation } from "react-query";
-import axios from "axios";
-import { useRef, useState } from "react";
+import axios, { AxiosError } from "axios";
+import { useState } from "react";
 import { useRouter } from "next/router";
+
+interface ICommentRequest {
+  content: string;
+}
 
 export const CommentModal = ({
   showModal,
   closeModal,
 }: {
-  showModal: any;
-  closeModal: any;
+  showModal: () => void;
+  closeModal: () => void;
 }) => {
   const baseImage = `https://source.boringavatars.com/beam/110/$1?colors=DF9E75,A9653B,412513,412510,412500`;
   const {
     query: { id },
   } = useRouter();
-  console.log(id);
+
   const [content, setContent] = useState("");
-  const onChangeContentHandler = e => {
+  const onChangeContentHandler = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
     setContent(e.target.value);
   };
   const queryClient = new QueryClient();
@@ -34,17 +40,19 @@ export const CommentModal = ({
     return response;
   };
 
-  const mutation = useMutation(req => addWrite(req), {
-    onError: error => console.log(error),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["content"]);
+  const { mutate } = useMutation<any, AxiosError, ICommentRequest>(
+    req => addWrite(req),
+    {
+      onError: error => console.log(error),
+      onSuccess: () => {
+        queryClient.invalidateQueries(["content"]);
+      },
     },
-  });
+  );
 
   const onClick = () => {
     setContent("");
-
-    mutation.mutate(
+    mutate(
       { content },
       {
         onSuccess: () => {
