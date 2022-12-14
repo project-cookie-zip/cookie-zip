@@ -5,14 +5,17 @@ import { useLoginCheck } from "src/hooks/useLoginCheck";
 import { baseImageData } from "@utils/client/baseImage";
 import { useMyData } from "src/hooks/getAPIs/useMyData";
 
-export const Header = ({ setIsDark }: any) => {
+interface childProps {
+  setIsDark: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const Header = ({ setIsDark }: childProps) => {
   const isLogin: boolean = useLoginCheck();
 
   const { data } = useMyData();
 
   const darkModeHandler = () => {
     if (localStorage.getItem("cookie-dark") === "false") {
-      localStorage.setItem("cookie-dark", "true");
       setIsDark(true);
     } else {
       localStorage.setItem("cookie-dark", "false");

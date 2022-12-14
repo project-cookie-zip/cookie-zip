@@ -4,8 +4,11 @@ import { useState, useEffect } from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import Category from "./Category";
+import { useLocalStorage } from "src/hooks/useLocalStorage";
+import { ThemeProvider } from "styled-components";
+import { darkTheme, lightTheme } from "src/theme";
 
-export const Layout = ({ children }: any, setIsDark) => {
+export const Layout = ({ children }: any) => {
   const { pathname } = useRouter();
 
   const [noLayout, setNoLayout] = useState<boolean>(false);
@@ -16,6 +19,8 @@ export const Layout = ({ children }: any, setIsDark) => {
       : setNoLayout(false);
   }, [pathname]);
 
+  const [isDark, setIsDark] = useLocalStorage("cookie-dark", false);
+
   return (
     <>
       {noLayout ? (
@@ -24,12 +29,14 @@ export const Layout = ({ children }: any, setIsDark) => {
           <Footer />
         </LayoutStyle>
       ) : (
-        <LayoutStyle>
-          <Header setIsDark={setIsDark} />
-          <Category />
-          {children}
-          <Footer />
-        </LayoutStyle>
+        <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+          <LayoutStyle>
+            <Header setIsDark={setIsDark} />
+            <Category />
+            {children}
+            <Footer />
+          </LayoutStyle>
+        </ThemeProvider>
       )}
     </>
   );
@@ -38,4 +45,5 @@ export const Layout = ({ children }: any, setIsDark) => {
 const LayoutStyle = styled.div`
   margin: 0 auto;
   max-width: 100vw;
+  /* background-color: ${props => props.theme.backgroundColor}; */
 `;

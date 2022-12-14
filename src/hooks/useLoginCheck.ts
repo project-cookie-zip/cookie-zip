@@ -17,6 +17,7 @@ export const useLoginCheck = () => {
 
   useEffect(() => {
     loginData();
+    // dark mode
     localStorage.getItem("cookie-dark") === null
       ? localStorage.setItem("cookie-dark", "false")
       : null;

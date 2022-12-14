@@ -184,8 +184,6 @@ import video from "pages/api/video";
 export const getServerSideProps = async (context: any) => {
   try {
     const { req, query } = context;
-    console.log("hello query", query);
-
     const videos: any = await (
       await fetch(
         `${process.env.LOCAL_BASE_URL}/api/videos/${query.id}`,
