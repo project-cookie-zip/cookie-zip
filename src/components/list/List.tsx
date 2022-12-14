@@ -15,7 +15,7 @@ export const List = () => {
     queryFn: getVideos,
   });
 
-  // console.log("data", data);
+  console.log("data", data);
 
   return (
     <STListContainer>

@@ -17,7 +17,7 @@ export default function SignUp() {
     formState: { errors },
   } = useForm<IFormInputs>();
   console.log(errors);
-  const onSubmit: SubmitHandler<IFormInputs> = async data => {
+  const onSubmit = async (data: IFormInputs) => {
     const response = await fetch("/api/users/enter", {
       method: "POST",
       body: JSON.stringify(data),
@@ -32,7 +32,7 @@ export default function SignUp() {
     type: "password",
     visible: false,
   });
-  const handlePasswordType = e => {
+  const handlePasswordType = () => {
     setPasswordType(() => {
       if (!passwordType.visible) {
         return { type: "text", visible: true };
