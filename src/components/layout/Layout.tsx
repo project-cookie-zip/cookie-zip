@@ -19,7 +19,7 @@ export const Layout = ({ children }: any) => {
       : setNoLayout(false);
   }, [pathname]);
 
-  const [isDark, setIsDark] = useLocalStorage("cookie-dark", false);
+  const [isDark, setIsDark] = useLocalStorage("cookie-dark");
 
   return (
     <>
@@ -45,5 +45,7 @@ export const Layout = ({ children }: any) => {
 const LayoutStyle = styled.div`
   margin: 0 auto;
   max-width: 100vw;
-  /* background-color: ${props => props.theme.backgroundColor}; */
+  height: 900px;
+  transition: 0.3s;
+  background-color: ${props => props.theme.backgroundColor};
 `;

@@ -91,7 +91,9 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   max-width: 100vw;
+  transition: 0.3s;
   background-color: ${props => props.theme.backgroundColor};
+  color: ${props => props.theme.mainFontColor};
 
   animation: addPostFadein 0.3s;
   @keyframes addPostFadein {
@@ -134,7 +136,7 @@ const SideInfo = styled.div`
 
   & span {
     margin: 0 5px 0 5px;
-    color: #929292;
+    color: ${props => props.theme.subFontColor};
   }
 `;
 
@@ -149,13 +151,14 @@ const UsersData = styled.div`
   padding: 10px;
   display: flex;
   align-items: center;
+  color: ${props => props.theme.mainFontColor};
 
   & span {
     margin: 0 5px 0 5px;
     color: #929292;
   }
   & .userName {
-    color: black;
+    color: ${props => props.theme.mainFontColor};
     font-weight: bold;
     font-size: 20px;
   }

@@ -58,6 +58,7 @@ export const Header = ({ setIsDark }: childProps) => {
 };
 
 const Container = styled.div`
+  transition: 0.3s;
   background-color: ${props => props.theme.backgroundColor};
   top: 0;
   position: fixed;

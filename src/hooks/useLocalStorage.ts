@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 
-export const useLocalStorage = (key: string, init: boolean) => {
-  const [isDark, setIsDark] = useState<any>(
-    // localStorage.getItem(key) === "true" ? true : false || init,
-    false,
-  );
+export const useLocalStorage = (key: string) => {
+  const [isDark, setIsDark] = useState<any>(false);
 
   useEffect(() => {
     if (isDark) {
