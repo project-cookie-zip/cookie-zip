@@ -45,7 +45,7 @@ export const Layout = ({ children }: any) => {
 const LayoutStyle = styled.div`
   margin: 0 auto;
   max-width: 100vw;
-  height: 900px;
+  height: 100%;
   transition: 0.3s;
   background-color: ${props => props.theme.backgroundColor};
 `;

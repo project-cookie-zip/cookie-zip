@@ -35,7 +35,9 @@ const CategoryWrap = styled.div`
   position: fixed;
   top: 23px;
   min-width: 480px;
-  background-color: white;
+  transition: 0.3s;
+  color: ${props => props.theme.mainFontColor};
+  background-color: ${props => props.theme.backgroundColor};
   margin-top: 20px;
   height: 40px;
   display: flex;
