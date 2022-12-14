@@ -46,6 +46,7 @@ export default function DetailPost({ videoDatas }: any) {
               <span>조회수 {videoDatas?.views}회</span>
               <span>{TimeToToday(new Date(videoDatas?.createdAt))}</span>
             </SideInfo>
+            {/* 수정/삭제칸 만들 예정 */}
           </ContentHeader>
           <UserInfo>
             <UsersData>
