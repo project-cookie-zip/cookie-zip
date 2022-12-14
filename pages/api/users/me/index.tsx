@@ -102,7 +102,7 @@ async function handler(
 
 export default withApiSession(
   withHandler({
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "DELETE"],
     handler,
   }),
 );
