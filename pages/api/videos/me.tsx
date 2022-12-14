@@ -11,6 +11,9 @@ async function handler(
     session: { user },
   } = req;
   const videos = await client.video.findMany({
+    include: {
+      user: true,
+    },
     where: {
       userId: user?.id,
     },
