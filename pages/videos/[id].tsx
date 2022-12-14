@@ -33,7 +33,8 @@ export default function DetailPost({ videoDatas }: any) {
   const baseImage = baseImageData(videoDatas?.user.id);
 
   const deleteVideo = async () => {
-    await axios.delete("/api/videos", videoDatas?.id);
+    console.log(videoDatas?.id);
+    await axios.delete(`/api/videos/${videoDatas?.id}`);
   };
 
   return (
