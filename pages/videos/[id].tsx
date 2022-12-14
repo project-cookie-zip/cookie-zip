@@ -31,6 +31,11 @@ export default function DetailPost({ videoDatas }: any) {
 
   // user base Image
   const baseImage = baseImageData(videoDatas?.user.id);
+
+  const deleteVideo = async () => {
+    await axios.delete("/api/videos", videoDatas?.id);
+  };
+
   return (
     <Container>
       {isLoading ? (
@@ -46,6 +51,7 @@ export default function DetailPost({ videoDatas }: any) {
               <span>조회수 {videoDatas?.views}회</span>
               <span>{TimeToToday(new Date(videoDatas?.createdAt))}</span>
             </SideInfo>
+            <button onClick={deleteVideo}>삭제버튼</button>
           </ContentHeader>
           <UserInfo>
             <UsersData>
