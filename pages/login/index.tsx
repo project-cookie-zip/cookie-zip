@@ -46,7 +46,6 @@ export default function Login() {
           </Button>
 
           <Link href="/sign">
-            {" "}
             <SignButton>
               <ButtonText className="text">회원가입</ButtonText>
             </SignButton>
