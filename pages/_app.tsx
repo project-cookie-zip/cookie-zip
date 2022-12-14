@@ -12,7 +12,7 @@ import { ReactQueryDevtools } from "react-query/devtools";
 
 const queryClient = new QueryClient();
 export default function App({ Component, pageProps }: AppProps) {
-  const [isDark, setIsDark] = useState<boolean>(false);
+  const [isDark, setIsDark] = useState<boolean>(true);
   const isLoading: boolean = useLoading();
 
   return (
@@ -20,7 +20,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <RecoilRoot>
         <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
           {/* <ReactQueryDevtools initialIsOpen={true} /> */}
-          <Layout>
+          <Layout setIsDark={setIsDark}>
             {isLoading ? <LoadingSpinner /> : null}
             <Component {...pageProps} />
           </Layout>

@@ -5,7 +5,7 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import Category from "./Category";
 
-export const Layout = ({ children }: any) => {
+export const Layout = ({ children }: any, setIsDark) => {
   const { pathname } = useRouter();
 
   const [noLayout, setNoLayout] = useState<boolean>(false);
@@ -25,7 +25,7 @@ export const Layout = ({ children }: any) => {
         </LayoutStyle>
       ) : (
         <LayoutStyle>
-          <Header />
+          <Header setIsDark={setIsDark} />
           <Category />
           {children}
           <Footer />

@@ -5,10 +5,20 @@ import { useLoginCheck } from "src/hooks/useLoginCheck";
 import { baseImageData } from "@utils/client/baseImage";
 import { useMyData } from "src/hooks/getAPIs/useMyData";
 
-export const Header = () => {
+export const Header = ({ setIsDark }: any) => {
   const isLogin: boolean = useLoginCheck();
 
   const { data } = useMyData();
+
+  const darkModeHandler = () => {
+    if (localStorage.getItem("cookie-dark") === "false") {
+      localStorage.setItem("cookie-dark", "true");
+      setIsDark(true);
+    } else {
+      localStorage.setItem("cookie-dark", "false");
+      setIsDark(false);
+    }
+  };
   return (
     <Container>
       <Logo>
@@ -16,12 +26,12 @@ export const Header = () => {
           <Image src={require("../../images/cookieLogo.png")} alt="logo" />
         </Link>
       </Logo>
+      <button onClick={darkModeHandler}>다크모드 버튼</button>
       {isLogin ? (
         <TopNav>
           <Image src={require("../../images/cookieSearch.png")} alt="검색" />
           <Image src={require("../../images/cookieAlert.png")} alt="알림" />
           <Link href={"/mypage"}>
-            {/* <Image src={require("../../images/cookieAva.png")} alt="프로필" /> */}
             <Image
               src={
                 data?.profile.avatar
@@ -45,7 +55,7 @@ export const Header = () => {
 };
 
 const Container = styled.div`
-  background-color: white;
+  background-color: ${props => props.theme.backgroundColor};
   top: 0;
   position: fixed;
   min-width: 480px;

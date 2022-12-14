@@ -91,6 +91,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   max-width: 100vw;
+  background-color: ${props => props.theme.backgroundColor};
 
   animation: addPostFadein 0.3s;
   @keyframes addPostFadein {
