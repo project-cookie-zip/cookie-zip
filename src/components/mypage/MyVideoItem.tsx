@@ -27,7 +27,7 @@ export default function MyVideoItem({ myVideos }: any): JSX.Element {
           <div>{myVideos?.title}</div>
           <div>
             <span>
-              {myVideos?.userId} ∙ 조회수 {myVideos?.views} ∙{" "}
+              {myVideos?.user?.name} ∙ 조회수 {myVideos?.views} ∙{" "}
               {TimeToToday(new Date(myVideos?.createdAt))}
             </span>
           </div>

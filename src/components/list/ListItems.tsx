@@ -28,7 +28,7 @@ export const ListItems = ({ listdata }: any): JSX.Element => {
               <div>{el?.title}</div>
               <div>
                 <span>
-                  {el?.userId} ∙ 조회수 {el?.views} ∙{" "}
+                  {el?.user?.name} ∙ 조회수 {el?.views} ∙{" "}
                   {TimeToToday(new Date(el?.createdAt))}
                 </span>
               </div>

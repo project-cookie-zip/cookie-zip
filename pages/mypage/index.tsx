@@ -202,7 +202,7 @@ export default function MyPage() {
           <span>구독자 10명 ∙ 동영상 10개</span>
         </div>
       </STProfile>
-      <MyVideoList myInfo={data} />
+      <MyVideoList />
     </>
   );
 }
