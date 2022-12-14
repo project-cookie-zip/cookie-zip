@@ -5,7 +5,7 @@ import { DefaultTheme } from "styled-components";
 // transition: 0.3s; 를 꼭 넣어주세요
 
 export const darkTheme: DefaultTheme = {
-  backgroundColor: "black",
+  backgroundColor: "#1b1b1b",
   mainFontColor: "white",
   subFontColor: "#929292",
 };

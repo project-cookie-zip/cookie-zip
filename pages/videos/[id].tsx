@@ -158,6 +158,7 @@ const UsersData = styled.div`
     color: #929292;
   }
   & .userName {
+    transition: 0.3s;
     color: ${props => props.theme.mainFontColor};
     font-weight: bold;
     font-size: 20px;
