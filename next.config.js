@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  reactStrictMode: true,
   swcMinify: true,
   env: {
     NEXT_PUBLIC_CLOUDFLARE_CLIENT_ID:
@@ -11,6 +10,7 @@ const nextConfig = {
     DATABASE_URL: process.env.DATABASE_URL,
     LOCAL_BASE_URL: process.env.LOCAL_BASE_URL,
     GET_API_HEADERS_COOKIE: process.env.GET_API_HEADERS_COOKIE,
+    NEXT_PUBLIC_COOKIE_PW: process.env.NEXT_PUBLIC_COOKIE_PW,
   },
 };
 
