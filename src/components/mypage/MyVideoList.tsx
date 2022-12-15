@@ -3,27 +3,21 @@ import MyVideoItem from "./MyVideoItem";
 import axios from "axios";
 import { useQuery } from "react-query";
 
-export const MyVideoList = ({ myInfo }: any): JSX.Element => {
-  // console.log("myInfo", myInfo);
-
-  const getVideos = async () => {
-    const { data } = await axios.get(`/api/videos`);
+export const MyVideoList = () => {
+  const getMyVideos = async () => {
+    const { data } = await axios.get(`/api/videos/me`);
     return data?.videos;
   };
 
-  const totalVideos = useQuery({
-    queryKey: ["getVideos"],
-    queryFn: getVideos,
+  const Videos = useQuery({
+    queryKey: ["getMyVideos"],
+    queryFn: getMyVideos,
   });
 
-  console.log("totalVideos", totalVideos?.data);
-  const myVideos = totalVideos?.data.filter(
-    (el: any) => el.userId === myInfo?.id,
-  );
-  // console.log("myVideos", myVideos);
+  console.log("Videos", Videos?.data);
   return (
     <STMyVideoListContainer>
-      {myVideos?.map((item: any) => (
+      {Videos?.data?.map((item: any) => (
         <MyVideoItem myVideos={item} key={item.id} />
       ))}
     </STMyVideoListContainer>
@@ -33,4 +27,7 @@ export const MyVideoList = ({ myInfo }: any): JSX.Element => {
 const STMyVideoListContainer = styled.div`
   margin-top: 50px;
   margin-bottom: 80px;
+  height: 100%;
+  transition: 0.3s;
+  background-color: ${props => props.theme.backgroundColor};
 `;

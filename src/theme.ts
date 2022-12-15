@@ -10,8 +10,10 @@ export const darkTheme: DefaultTheme = {
   subFontColor: "#929292",
   cancelBtnBackground: "gray",
   cancelBtnFontColor: "white",
+  borderColor: "solid #929292",
+  borderWidth: "1px 2px 2px 1px",
+  boxShadow: "#929292 2px 1.5px 8px",
 };
-
 export const lightTheme: DefaultTheme = {
   backgroundColor: "white",
   mainFontColor: "black",
