@@ -10,6 +10,8 @@ import { SubsBtn } from "src/components/videos/video/SubsBtn";
 import { TimeToToday } from "@utils/client/timeToToday";
 import { LoadingSpinner } from "src/components/videos/video/LoadingSpinner";
 import { baseImageData } from "@utils/client/baseImage";
+import Swal from "sweetalert2";
+import Router from "next/router";
 
 export default function DetailPost({ videoDatas }: any) {
   const { query } = useRouter();
@@ -33,8 +35,41 @@ export default function DetailPost({ videoDatas }: any) {
   const baseImage = baseImageData(videoDatas?.user.id);
 
   const deleteVideo = async () => {
-    console.log(videoDatas?.id);
-    await axios.delete(`/api/videos/${videoDatas?.id}`);
+    Swal.fire({
+      title: "정말 삭제할까요?",
+      icon: "question",
+      confirmButtonColor: "#A9653B",
+      confirmButtonText: "삭제하기",
+      showCancelButton: true,
+      cancelButtonText: "취소",
+      cancelButtonColor: "#ad8f7d",
+      width: "80vw",
+    }).then(async result => {
+      if (result.value) {
+        try {
+          await axios.delete(`/api/videos/${videoDatas?.id}`);
+          Swal.fire({
+            title: "삭제완료!",
+            icon: "success",
+            confirmButtonColor: "#A9653B",
+            confirmButtonText: "홈으로",
+            width: "80vw",
+          }).then(result => {
+            if (result.value) {
+              Router.push("/");
+            }
+          });
+        } catch (error) {
+          Swal.fire({
+            title: "다시 시도해주세요 ㅠ",
+            icon: "warning",
+            confirmButtonColor: "#A9653B",
+            confirmButtonText: "확인",
+            width: "80vw",
+          });
+        }
+      }
+    });
   };
 
   return (
