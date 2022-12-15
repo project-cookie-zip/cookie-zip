@@ -6,7 +6,6 @@ import Image from "next/image";
 import { TimeToToday } from "@utils/client/timeToToday";
 
 export default function MyVideoItem({ myVideos }: any): JSX.Element {
-  // console.log(myVideos);
   return (
     <STContainer>
       <Link href={`/videos/${myVideos?.id}`}>
@@ -16,8 +15,12 @@ export default function MyVideoItem({ myVideos }: any): JSX.Element {
       </Link>
       <STContentBox>
         <Image
-          // src={el?.user.avatar ? el?.avatar : baseImageData(el.userId)}
-          src={baseImageData(myVideos.userId)}
+          src={
+            myVideos?.user.avatar
+              ? myVideos?.avatar
+              : baseImageData(myVideos.userId)
+          }
+          // src={baseImageData(myVideos.userId)}
           alt="프로필사진"
           width={50}
           height={50}

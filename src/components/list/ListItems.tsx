@@ -5,7 +5,6 @@ import Image from "next/image";
 import { baseImageData } from "@utils/client/baseImage";
 
 export const ListItems = ({ listdata }: any): JSX.Element => {
-  console.log("listdata", listdata);
   return (
     <>
       {listdata?.map((el: any) => (
@@ -40,10 +39,7 @@ export const ListItems = ({ listdata }: any): JSX.Element => {
   );
 };
 
-const STListItemContainer = styled.div``;
-
 const STContainer = styled.div`
-  /* border: 1px solid #754423; */
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
     rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   display: flex;

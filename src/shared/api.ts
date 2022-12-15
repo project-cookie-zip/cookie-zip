@@ -22,6 +22,7 @@ export const myAPI = {
   getMyData: () => api.get(`/api/users/me`),
   getMyImage: () => api.get(`/api/image`),
   postMyImage: (req: postImageReq) => api.post(`/api/users/me`, req),
+  getMyVideos: () => api.get(`/api/videos/me`),
 };
 
 interface videoReqData {

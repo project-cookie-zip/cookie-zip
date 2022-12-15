@@ -1,21 +1,17 @@
 import { ListItems } from "./ListItems";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import { useQuery } from "react-query";
+import { videoAPI } from "src/shared/api";
 
 export const List = () => {
   const getVideos = async () => {
-    const { data } = await axios.get(`/api/videos`);
+    const { data } = await videoAPI.getVideos();
     return data?.videos;
   };
 
-  const { data } = useQuery({
-    queryKey: ["getVideos"],
-    queryFn: getVideos,
+  const { data } = useQuery("getVideos", getVideos, {
+    refetchOnWindowFocus: false,
   });
-
-  // console.log("data", data);
 
   return (
     <STListContainer>

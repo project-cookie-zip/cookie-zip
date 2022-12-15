@@ -32,7 +32,6 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {/* <Hello>메인페이지 한번 만들어보자구우</Hello> */}
       <List />
     </div>
   );
