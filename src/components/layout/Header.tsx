@@ -64,6 +64,7 @@ const Container = styled.div`
   position: fixed;
   min-width: 480px;
   display: flex;
+  z-index: 1;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #a9653b;
