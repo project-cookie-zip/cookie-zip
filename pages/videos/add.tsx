@@ -5,16 +5,14 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import Router from "next/router";
 import { LoadingSpinner } from "src/components/videos/video/LoadingSpinner";
+import { videoAPI } from "src/shared/api";
 
 export default function AddPost() {
   // 동영상 처리
   const [mediaView, setMediaView] = useState("");
-  const [mediaSend, setMediaSend] = useState<string | any>("");
   const [testSend, setTestSend] = useState("");
 
   const uploadFile = (file: any) => {
-    // console.log(file);
-    setTestSend(file);
     let maxSize = 200 * 1024 * 1024;
     let fileSize = file.size;
     if (fileSize > maxSize) {
@@ -23,6 +21,7 @@ export default function AddPost() {
         icon: "warning",
         confirmButtonColor: "#A9653B",
         confirmButtonText: "알겠어용",
+        width: "80vw",
       }).then(result => {
         if (result.value) {
         }
@@ -30,20 +29,14 @@ export default function AddPost() {
     } else {
       const videourl = URL.createObjectURL(file);
       setMediaView(videourl);
-      const reader = new FileReader();
-      for (let i = 0; i < file.length; i++) {
-        reader.readAsDataURL(file[i]);
-        reader.onloadend = () => {
-          let thisMidea = reader.result;
-          setMediaSend(thisMidea);
-        };
-      }
+      setTestSend(file);
     }
   };
 
+  // delete video file and view
   const deleteVideo = () => {
     setMediaView("");
-    setMediaSend("");
+    setTestSend("");
   };
 
   // title value
@@ -62,30 +55,15 @@ export default function AddPost() {
     setTextareaHeight(content.split("\n").length);
   }, [content]);
 
-  // category value
+  // category value - 현재 미구현
   const [category, setCategory] = useState("");
-
-  // // form data // 클라우드 플레어 특성상 해당 코드는 미사용
-  // interface sendData {
-  //   title: string;
-  //   description: string;
-  //   category: string;
-  //   // video: string | ArrayBuffer | null | Blob;
-  // }
-  // let sendData: sendData = {
-  //   title: title,
-  //   description: content,
-  //   category: category,
-  //   // video: mediaSend,
-  // };
 
   const videoPostApi = async () => {
     let formData = new FormData();
     formData.append("file", testSend);
     const {
       data: { uploadURL, uid },
-    } = await axios.get("/api/video");
-    console.log(uploadURL, uid);
+    } = await videoAPI.getCloudVideo();
     await axios.post(uploadURL, formData).then(res => console.log(res));
 
     const {
@@ -103,12 +81,15 @@ export default function AddPost() {
       )
     ).json();
 
-    await axios.post("/api/videos", {
+    await videoAPI.postVideo({
       title,
       description: content,
       videoUrl: preview,
       thumbnailUrl: thumbnail,
     });
+    // stop uploading
+    setNowUploading(false);
+
     Swal.fire({
       toast: true,
       position: "top-end",
@@ -117,6 +98,7 @@ export default function AddPost() {
       showConfirmButton: false,
       timer: 1500,
       timerProgressBar: true,
+      width: "80vw",
     });
     Router.push("/");
   };
@@ -125,14 +107,17 @@ export default function AddPost() {
   const [nowUploading, setNowUploading] = useState(false);
 
   const addVideo = async () => {
+    setNowUploading(true);
     if (title === "" || testSend === "" || content === "") {
       Swal.fire({
         title: "글을 확인해주세요ㅠㅠ",
         icon: "warning",
         confirmButtonColor: "#A9653B",
         confirmButtonText: "네, 알겠어요",
+        width: "80vw",
       }).then(result => {
         if (result.value) {
+          setNowUploading(false);
         }
       });
     } else {
@@ -141,12 +126,11 @@ export default function AddPost() {
         icon: "question",
         confirmButtonColor: "#A9653B",
         confirmButtonText: "넹",
+        width: "80vw",
       }).then(result => {
         if (result.value) {
-          setNowUploading(true);
           videoPostApi();
         }
-        setNowUploading(false);
       });
     }
   };
@@ -161,13 +145,14 @@ export default function AddPost() {
       confirmButtonText: "취소할래요",
       cancelButtonColor: "#d4b29e",
       cancelButtonText: "마저 작성할게요",
+      width: "80vw",
     }).then(result => {
       if (result.value) {
         Router.push("/");
       }
     });
   };
-
+  console.log(nowUploading);
   return (
     <FormContainer>
       {nowUploading ? <LoadingSpinner /> : null}

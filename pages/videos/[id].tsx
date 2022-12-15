@@ -1,32 +1,20 @@
 import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
-import axios from "axios";
+import Swal from "sweetalert2";
+import Router from "next/router";
 import { useRouter } from "next/router";
-import { useQuery } from "react-query";
 import { Accordion } from "src/components/videos/video/Accordion";
 import { LikeBtn } from "src/components/videos/video/LikeBtn";
 import { SubsBtn } from "src/components/videos/video/SubsBtn";
 import { TimeToToday } from "@utils/client/timeToToday";
-import { LoadingSpinner } from "src/components/videos/video/LoadingSpinner";
 import { baseImageData } from "@utils/client/baseImage";
-import Swal from "sweetalert2";
-import Router from "next/router";
+import { videoAPI } from "src/shared/api";
 
+// data fetch SSP 적용 - videoDatas
 export default function DetailPost({ videoDatas }: any) {
   const { query } = useRouter();
-
-  // video data fetch
-  // const apiTest = async () => {
-  //   const data = await axios.get(`/api/videos/${query.id}`);
-  //   return data?.data.video;
-  // };
-  // const { data, isError, isLoading } = useQuery("getVideoData", apiTest, {
-  //   refetchOnWindowFocus: false,
-  // });
-
-  // SSP 적용으로 react query가 불필요해짐에 따라 임시 로딩 불리언 추가
-  const isLoading: boolean = false;
+  console.log("sseeee테스트", videoDatas);
 
   // 구독자수 처리 예정
   // console.log("구독자수", data?.comments.length);
@@ -47,7 +35,7 @@ export default function DetailPost({ videoDatas }: any) {
     }).then(async result => {
       if (result.value) {
         try {
-          await axios.delete(`/api/videos/${videoDatas?.id}`);
+          await videoAPI.deleteVideo(videoDatas?.id);
           Swal.fire({
             title: "삭제완료!",
             icon: "success",
@@ -74,54 +62,46 @@ export default function DetailPost({ videoDatas }: any) {
 
   return (
     <Container>
-      {isLoading ? (
-        <LoadingSpinner />
-      ) : (
-        <>
-          <VideoWrap>
-            <VideoView src={videoDatas?.videoUrl} allow="fullscreen" />
-          </VideoWrap>
-          <ContentHeader>
-            <Title>{videoDatas?.title}</Title>
-            <SideInfo>
-              <span>조회수 {videoDatas?.views}회</span>
-              <span>{TimeToToday(new Date(videoDatas?.createdAt))}</span>
-            </SideInfo>
-            <button onClick={deleteVideo}>삭제버튼</button>
-          </ContentHeader>
-          <UserInfo>
-            <UsersData>
-              <Link href={"/"}>
-                <Image
-                  src={
-                    videoDatas?.user.avatar
-                      ? videoDatas?.user.avatar
-                      : baseImage
-                  }
-                  alt="프로필사진"
-                  width={60}
-                  height={60}
-                  unoptimized={true}
-                />
-              </Link>
-              <span className="userName">{videoDatas?.user.name}</span>
-              <span>구독자수(10만)</span>
-            </UsersData>
-            <SubsBtn createdUserId={videoDatas?.user.id} />
-          </UserInfo>
-          <SideBtnsWrap>
-            <LikeBtn
-              likeCount={videoDatas?._count.likes}
-              pageQuery={query?.id}
-              videoState={videoDatas}
+      <VideoWrap>
+        <VideoView src={videoDatas?.videoUrl} allow="fullscreen" />
+      </VideoWrap>
+      <ContentHeader>
+        <Title>{videoDatas?.title}</Title>
+        <SideInfo>
+          <span>조회수 {videoDatas?.views}회</span>
+          <span>{TimeToToday(new Date(videoDatas?.createdAt))}</span>
+        </SideInfo>
+        <button onClick={deleteVideo}>삭제버튼</button>
+      </ContentHeader>
+      <UserInfo>
+        <UsersData>
+          <Link href={"/"}>
+            <Image
+              src={
+                videoDatas?.user.avatar ? videoDatas?.user.avatar : baseImage
+              }
+              alt="프로필사진"
+              width={60}
+              height={60}
+              unoptimized={true}
             />
-          </SideBtnsWrap>
-          <Accordion baseImage={baseImage} videoState={videoDatas} />
-          <ContentWrap>
-            <span>{videoDatas?.description}</span>
-          </ContentWrap>
-        </>
-      )}
+          </Link>
+          <span className="userName">{videoDatas?.user.name}</span>
+          <span>구독자수(10만)</span>
+        </UsersData>
+        <SubsBtn createdUserId={videoDatas?.user.id} />
+      </UserInfo>
+      <SideBtnsWrap>
+        <LikeBtn
+          likeCount={videoDatas?._count.likes}
+          pageQuery={query?.id}
+          videoState={videoDatas}
+        />
+      </SideBtnsWrap>
+      <Accordion baseImage={baseImage} videoState={videoDatas} />
+      <ContentWrap>
+        <span>{videoDatas?.description}</span>
+      </ContentWrap>
     </Container>
   );
 }
@@ -225,27 +205,20 @@ const ContentWrap = styled.div`
 // 에러 해결 완료 - headers의 Cookie data로 처리
 
 import fetch from "isomorphic-unfetch";
-import video from "pages/api/video";
 
 export const getServerSideProps = async (context: any) => {
   try {
     const { req, query } = context;
+    const reqHeaders: HeadersInit = new Headers();
+    reqHeaders.set(`Cookie`, `${process.env.GET_API_HEADERS_COOKIE}`);
     const videos: any = await (
-      await fetch(
-        `${process.env.LOCAL_BASE_URL}/api/videos/${query.id}`,
-        // `http://localhost:3000/api/videos`,
-        {
-          headers: {
-            // Authorization: "Bearer 2PptoKx0NQLjSOoPxLgePH2I6GztAIx1p-hKv6Z0",
-            // "Content-Type": "application/json",
-
-            // SSP 작업 시 참고 *
-            // 현재 요청 시 plz log in error가 발생하여
-            // Cookie 값을 임의로 넣어주고 있습니다.
-            Cookie: process.env.GET_API_HEADERS_COOKIE,
-          },
-        },
-      )
+      await fetch(`${process.env.LOCAL_BASE_URL}/api/videos/${query.id}`, {
+        //   // SSP 작업 시 참고 *
+        //   // 현재 요청 시 plz log in error가 발생하여
+        //   // Cookie 값을 임의로 넣어주고 있습니다.
+        //   Cookie: process.env.GET_API_HEADERS_COOKIE,
+        headers: reqHeaders,
+      })
     ).json();
     const videoDatas = videos.video;
     return {

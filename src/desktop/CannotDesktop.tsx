@@ -9,9 +9,9 @@ export const CannotDesktop = () => {
         src={require("../images/cookieLogo.png")}
         width={700}
         height={230}
-        unoptimized={true}
         alt="not here"
         className="logo"
+        priority
       />
       <Container>
         <ImageBox>
