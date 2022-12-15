@@ -10,11 +10,12 @@ import { SubsBtn } from "src/components/videos/video/SubsBtn";
 import { TimeToToday } from "@utils/client/timeToToday";
 import { baseImageData } from "@utils/client/baseImage";
 import { videoAPI } from "src/shared/api";
+import { useMyData } from "src/hooks/getAPIs/useMyData";
+import { useEffect, useState } from "react";
 
 // data fetch SSP 적용 - videoDatas
 export default function DetailPost({ videoDatas }: any) {
   const { query } = useRouter();
-  console.log("sseeee테스트", videoDatas);
 
   // 구독자수 처리 예정
   // console.log("구독자수", data?.comments.length);
@@ -60,6 +61,15 @@ export default function DetailPost({ videoDatas }: any) {
     });
   };
 
+  // isMyVideo?:
+  const myData = useMyData();
+  const [isMe, setIsMe] = useState<boolean>(false);
+  useEffect(() => {
+    if (myData?.data.profile.id === videoDatas?.userId) {
+      setIsMe(true);
+    }
+  }, [myData, videoDatas]);
+
   return (
     <Container>
       <VideoWrap>
@@ -71,7 +81,6 @@ export default function DetailPost({ videoDatas }: any) {
           <span>조회수 {videoDatas?.views}회</span>
           <span>{TimeToToday(new Date(videoDatas?.createdAt))}</span>
         </SideInfo>
-        <button onClick={deleteVideo}>삭제버튼</button>
       </ContentHeader>
       <UserInfo>
         <UsersData>
@@ -97,6 +106,13 @@ export default function DetailPost({ videoDatas }: any) {
           pageQuery={query?.id}
           videoState={videoDatas}
         />
+        <span
+          style={isMe ? { display: "block" } : { display: "none" }}
+          onClick={deleteVideo}
+          className="deleteVideo"
+        >
+          삭제
+        </span>
       </SideBtnsWrap>
       <Accordion baseImage={baseImage} videoState={videoDatas} />
       <ContentWrap>
@@ -113,6 +129,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   max-width: 100vw;
+  height: 100vh;
   transition: 0.3s;
   background-color: ${props => props.theme.backgroundColor};
   color: ${props => props.theme.mainFontColor};
@@ -190,7 +207,13 @@ const UsersData = styled.div`
 const SideBtnsWrap = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   width: 100vw;
+
+  & .deleteVideo {
+    padding-right: 20px;
+    font-size: 14px;
+  }
 `;
 
 const ContentWrap = styled.div`

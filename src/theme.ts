@@ -8,12 +8,16 @@ export const darkTheme: DefaultTheme = {
   backgroundColor: "#1b1b1b",
   mainFontColor: "white",
   subFontColor: "#929292",
+  cancelBtnBackground: "gray",
+  cancelBtnFontColor: "white",
 };
 
 export const lightTheme: DefaultTheme = {
   backgroundColor: "white",
   mainFontColor: "black",
   subFontColor: "#929292",
+  cancelBtnBackground: "white",
+  cancelBtnFontColor: "black",
 };
 
 // USAGE ############ pages>videos>[id].tsx에 적용돼있음

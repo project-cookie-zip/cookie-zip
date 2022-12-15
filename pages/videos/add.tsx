@@ -245,11 +245,11 @@ export default function AddPost() {
 
 const FormContainer = styled.form`
   margin: 0 auto;
-  margin-top: 55px;
   display: flex;
   flex-direction: column;
   align-items: center;
   max-width: 480px;
+  height: 950px;
 
   animation: addPostFadein 0.8s;
   @keyframes addPostFadein {
@@ -263,6 +263,7 @@ const FormContainer = styled.form`
 `;
 
 const VideoWrap = styled.div`
+  margin-top: 58px;
   width: 90vw;
   height: 300px;
 `;
@@ -318,6 +319,7 @@ const ContentsWrap = styled.div`
 
   & span {
     font-size: 16px;
+    color: ${props => props.theme.mainFontColor};
   }
   & input {
     height: 45px;
@@ -354,6 +356,7 @@ const ContentsWrap = styled.div`
     margin-top: 5px;
     margin-bottom: 15px;
     text-align: right;
+    color: ${props => props.theme.subFontColor};
   }
 `;
 
@@ -389,7 +392,8 @@ const ButtonWrap = styled.div`
     color: white;
   }
   & .cancel {
-    background-color: transparent;
     border: 1px solid #a9653b;
+    background-color: ${props => props.theme.cancelBtnBackground};
+    color: ${props => props.theme.cancelBtnFontColor};
   }
 `;
