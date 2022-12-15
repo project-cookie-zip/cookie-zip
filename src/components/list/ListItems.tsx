@@ -25,10 +25,10 @@ export const ListItems = ({ listdata }: any): JSX.Element => {
               unoptimized={true}
             />
             <STContent>
-              <div>{el?.title}</div>
+              <STTitle>{el?.title}</STTitle>
               <div>
                 <span>
-                  {el?.userId} ∙ 조회수 {el?.views} ∙{" "}
+                  {el?.user?.name} ∙ 조회수 {el?.views} ∙{" "}
                   {TimeToToday(new Date(el?.createdAt))}
                 </span>
               </div>
@@ -40,14 +40,20 @@ export const ListItems = ({ listdata }: any): JSX.Element => {
   );
 };
 
+const STListItemContainer = styled.div``;
+
 const STContainer = styled.div`
-  border: 1px solid #754423;
+  /* border: 1px solid #754423; */
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   display: flex;
   flex-direction: column;
   width: 460px;
   height: 310px;
   margin: 0 auto;
   margin-bottom: 40px;
+  transition: 0.3s;
+  box-shadow: ${props => props.theme.boxShadow};
 `;
 
 const STVideoBox = styled.div`
@@ -66,6 +72,7 @@ const STContentBox = styled.div`
   display: flex;
   align-items: center;
   height: 100px;
+
   & span {
     font-size: 13px;
     color: gray;
@@ -75,18 +82,16 @@ const STContentBox = styled.div`
   }
 `;
 
-const STChannelName = styled.div`
-  border-radius: 50%;
-  font-size: 16px;
-  text-align: center;
-  line-height: 50px;
-  background-color: #c97f4ebb;
-  width: 50px;
-  height: 50px;
-  margin: 0 10px;
-`;
-
 const STContent = styled.div`
   display: flex;
   flex-direction: column;
+  & span {
+    transition: 0.3s;
+    color: ${props => props.theme.subFontColor};
+  }
+`;
+
+const STTitle = styled.div`
+  transition: 0.3s;
+  color: ${props => props.theme.mainFontColor};
 `;

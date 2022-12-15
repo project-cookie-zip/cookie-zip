@@ -1,8 +1,9 @@
 import styled from "styled-components";
-import axios from "axios";
 import { useMutation } from "react-query";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { videoAPI } from "src/shared/api";
+import { myAPI } from "src/shared/api";
 
 export const SubsBtn = ({ createdUserId }: any) => {
   // Router pathname
@@ -10,7 +11,7 @@ export const SubsBtn = ({ createdUserId }: any) => {
 
   // useMutation
   const subscribeAPI = async () => {
-    const subsUpdate = await axios.post(`/api/subscribe/${createdUserId}`);
+    const subsUpdate = await videoAPI.postSubsReq(createdUserId);
   };
   const subsMutation = useMutation(subscribeAPI);
 
@@ -23,7 +24,7 @@ export const SubsBtn = ({ createdUserId }: any) => {
 
   // subscribe data match
   const subsData = async () => {
-    const { data } = await axios.get(`/api/users/me`);
+    const { data } = await myAPI.getMyData();
     console.log(data);
     data?.subscribeList.map((item: any) => {
       item.createdFor.id === createdUserId ? setIsSubscribed(true) : null;

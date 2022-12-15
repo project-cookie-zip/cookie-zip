@@ -1,50 +1,53 @@
 import styled from "styled-components";
 import Image from "next/image";
 import { QueryClient, useMutation } from "react-query";
-import axios from "axios";
-import { useRef, useState } from "react";
+import axios, { AxiosError } from "axios";
+import { useState } from "react";
 import { useRouter } from "next/router";
+import { commentAPI } from "src/shared/api";
+
+interface ICommentRequest {
+  content: string;
+}
 
 export const CommentModal = ({
   showModal,
   closeModal,
 }: {
-  showModal: any;
-  closeModal: any;
+  showModal: () => void;
+  closeModal: () => void;
 }) => {
   const baseImage = `https://source.boringavatars.com/beam/110/$1?colors=DF9E75,A9653B,412513,412510,412500`;
   const {
     query: { id },
   } = useRouter();
-  console.log(id);
+
   const [content, setContent] = useState("");
-  const onChangeContentHandler = e => {
+  const onChangeContentHandler = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
     setContent(e.target.value);
   };
   const queryClient = new QueryClient();
-  const api = axios.create({
-    baseURL: "http://localhost:3000/",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
 
   const addWrite = async (req: any) => {
-    const response = await api.post(`/api/comments?id=${id}`, req);
+    const response = await commentAPI.postComment(id, req);
     return response;
   };
 
-  const mutation = useMutation(req => addWrite(req), {
-    onError: error => console.log(error),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["content"]);
+  const { mutate } = useMutation<any, AxiosError, ICommentRequest>(
+    req => addWrite(req),
+    {
+      onError: error => console.log(error),
+      onSuccess: () => {
+        queryClient.invalidateQueries(["content"]);
+      },
     },
-  });
+  );
 
   const onClick = () => {
     setContent("");
-
-    mutation.mutate(
+    mutate(
       { content },
       {
         onSuccess: () => {

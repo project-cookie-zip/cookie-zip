@@ -1,10 +1,13 @@
 import styled from "styled-components";
 import Image from "next/image";
-import { Key, useState } from "react";
+import { useState } from "react";
 import { CommentModal } from "./CommentModal";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisV } from "@fortawesome/free-solid-svg-icons/faEllipsisV";
-import IconButton from "@mui/material/IconButton";
+import Comment from "./Comment";
+
+export interface IComment {
+  id: number;
+  content: string;
+}
 
 export const Accordion = ({
   baseImage,
@@ -14,12 +17,10 @@ export const Accordion = ({
   videoState: any;
 }) => {
   const closeDetailse = () => {
-    console.log("댓글닫기");
     const details = document.querySelector("details");
     details?.removeAttribute("open");
   };
   const comment = videoState?.comments;
-  console.log(comment);
   // add comment modal
   const [showModal, setShowModal] = useState(false);
 
@@ -51,27 +52,13 @@ export const Accordion = ({
         </AddComment>
         <CommentModal showModal={showModal} closeModal={closeModal} />
 
-        {comment?.map(
-          (comments: {
-            id: Key | null | undefined;
-            content: string | number;
-          }) => (
-            // eslint-disable-next-line react/jsx-key
-            <CommentsWrap key={comments.id}>
-              <Image
-                src={baseImage}
-                alt="프로필사진"
-                width={60}
-                height={60}
-                unoptimized={true}
-              />
-              <ContentWrap> {comments.content}</ContentWrap>
-              <IconButton aria-label="Example">
-                <FontAwesomeIcon icon={faEllipsisV} />
-              </IconButton>
-            </CommentsWrap>
-          ),
-        )}
+        {comment?.map((comments: IComment) => (
+          <Comment
+            key={comments.id}
+            comments={comments}
+            baseImage={baseImage}
+          />
+        ))}
       </CommentsLine>
     </AcodianWrap>
   );
@@ -152,7 +139,6 @@ const AddComment = styled.div`
     font-size: 14px;
   }
 `;
-
 const CommentsWrap = styled.div`
   display: flex;
   padding: 15px;
@@ -160,4 +146,10 @@ const CommentsWrap = styled.div`
 `;
 const ContentWrap = styled.div`
   margin-left: 10px;
+`;
+const Div = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 92%;
+  align-items: center;
 `;

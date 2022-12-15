@@ -1,15 +1,13 @@
-import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
+import { videoAPI } from "src/shared/api";
 export const useIsLiked = () => {
   const { query } = useRouter();
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const getLiked = async () => {
-    const data = await axios
-      .get(`/api/videos/${query.id}`)
+    const data = await videoAPI
+      .getEachVideo(`${query.id}`)
       .then(res => {
-        // console.log(res.data.isLike);
         setIsLiked(res.data.isLike);
       })
       .catch(err => {
