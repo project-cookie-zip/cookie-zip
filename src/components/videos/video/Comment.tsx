@@ -3,31 +3,34 @@ import Image from "next/image";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons/faEllipsisV";
-import IconButton from "@mui/material/IconButton";
 import { IComment } from "./Accordion";
-import api, { commentAPI } from "src/shared/api";
+import { commentAPI } from "src/shared/api";
 
 interface ICommentProps {
   comments: IComment;
+  userName: string;
   baseImage: string;
 }
 
-const Comment = ({ comments, baseImage }: ICommentProps) => {
+const Comment = ({ comments, userName, baseImage }: ICommentProps) => {
   // 모달창 노출 여부 state
   const [modalOpen, setModalOpen] = useState(false);
   const [isHover, setIsHover] = useState(false);
+  console.log(comments);
   // 모달창 노출
   const showModal = () => {
     setModalOpen(props => !props);
   };
 
-  const deletHandler = async (req: any) => {
-    const response = await commentAPI.deleteComment(req);
+  const deletHandler = async (id: any) => {
+    const response = await commentAPI.deleteComment(id);
     return response;
   };
 
+  console.log(modalOpen);
+
   return (
-    <div>
+    <Wrapper>
       <CommentsWrap key={comments.id}>
         <Image
           src={baseImage}
@@ -36,26 +39,41 @@ const Comment = ({ comments, baseImage }: ICommentProps) => {
           height={60}
           unoptimized={true}
         />
+
         <Div
           onMouseOver={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}
         >
-          <ContentWrap>{comments.content} </ContentWrap>
+          <div>
+            <NickName>{userName}</NickName>
+            <ContentWrap>{comments.content} </ContentWrap>
+          </div>
 
-          <IconButton onClick={showModal} aria-label="Example">
-            <Container modalOpen={modalOpen}>
-              <Buttons onClick={deletHandler}>삭제하기</Buttons>
-            </Container>
-
+          <IconContainer onClick={showModal}>
             <Icon $isHover={isHover} icon={faEllipsisV} />
-          </IconButton>
+          </IconContainer>
         </Div>
       </CommentsWrap>
-    </div>
+      {modalOpen ? (
+        <Container modalOpen={modalOpen}>
+          <Buttons type="button" onClick={() => deletHandler(comments.id)}>
+            삭제하기
+          </Buttons>
+        </Container>
+      ) : null}
+    </Wrapper>
   );
 };
 
 export default Comment;
+
+const Wrapper = styled.div`
+  position: relative;
+`;
+const NickName = styled.div`
+  font-size: 14px;
+  margin-left: 10px;
+`;
 const CommentsWrap = styled.div`
   display: flex;
   width: 95%;
@@ -67,12 +85,15 @@ const ContentWrap = styled.div`
 `;
 const Div = styled.div`
   display: flex;
+  position: relative;
   justify-content: space-between;
   width: 92%;
   align-items: center;
 `;
 const Container = styled.div<{ modalOpen: boolean }>`
-  display: ${props => (props.modalOpen ? "auto" : "none")};
+  position: absolute;
+  right: 50px;
+  top: -10px;
   width: 100px;
   height: 80px;
   background-color: #ffffff;
@@ -90,4 +111,9 @@ const Buttons = styled.button`
 `;
 const Icon = styled(FontAwesomeIcon)<{ $isHover: boolean }>`
   display: ${props => (props.$isHover ? "auto" : "none")};
+`;
+
+const IconContainer = styled.div`
+  width: 30px;
+  height: 30px;
 `;

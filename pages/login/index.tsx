@@ -2,6 +2,8 @@ import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useRouter } from "next/router";
+import Swal from "sweetalert2";
 interface ILoginInputs {
   email: string;
   password: string;
@@ -13,14 +15,20 @@ export default function Login() {
     watch, // 현재 상태 볼 수있음
     formState: { errors },
   } = useForm<ILoginInputs>();
+  const router = useRouter();
   const onSubmit = async (data: ILoginInputs) => {
-    const response = await fetch("/api/users/login", {
+    const { ok } = await fetch("/api/users/login", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },
     });
+    if (ok) {
+      router.push("/");
+    } else {
+      Swal.fire("실패ㅗ");
+    }
   };
 
   return (
