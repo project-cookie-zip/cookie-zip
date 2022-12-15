@@ -13,6 +13,7 @@ import { videoAPI } from "src/shared/api";
 import { useMyData } from "src/hooks/getAPIs/useMyData";
 import { useEffect, useState } from "react";
 
+//test code
 // data fetch SSP 적용 - videoDatas
 export default function DetailPost({ videoDatas }: any) {
   const { query } = useRouter();

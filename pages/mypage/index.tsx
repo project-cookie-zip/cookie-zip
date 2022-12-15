@@ -105,7 +105,7 @@ export default function MyPage() {
       return new Promise(resolve => {
         reader.onload = () => {
           setImgSrc(reader.result);
-          resolve();
+          // resolve();
         };
       });
     }
