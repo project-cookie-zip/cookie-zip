@@ -12,7 +12,7 @@ export default api;
 
 export const commentAPI = {
   postComment: (id: any, req: any) => api.post(`/api/comments?id=${id}`, req),
-  deleteComment: (req: any) => api.delete(`/api/comments`, req),
+  deleteComment: (id: any) => api.delete(`/api/comments/${id}`),
 };
 
 type postImageReq = {

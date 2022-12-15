@@ -3,6 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useState } from "react";
+import { useRouter } from "next/router";
+import Swal from "sweetalert2";
+
 interface IFormInputs {
   email: string;
   nickname: string;
@@ -17,14 +20,23 @@ export default function SignUp() {
     formState: { errors },
   } = useForm<IFormInputs>();
   console.log(errors);
+
+  const router = useRouter();
+
   const onSubmit = async (data: IFormInputs) => {
-    const response = await fetch("/api/users/enter", {
+    const { ok } = await fetch("/api/users/enter", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },
     });
+
+    if (ok) {
+      router.push("/login");
+    } else {
+      Swal.fire("뭐래 이자식이");
+    }
   };
 
   // TODO : password type 변경용 state
