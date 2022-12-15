@@ -98,33 +98,6 @@ async function handler(
     }
     res.json({ ok: true });
   }
-  if (req.method === "DELETE") {
-    const {
-      session: { user },
-      body: { videoId },
-    } = req;
-    const targetVideo = await client.video.findUnique({
-      where: {
-        id: videoId,
-      },
-      include: {},
-    });
-    if (targetVideo?.userId === user?.id) {
-      await client.comment.delete({
-        where: {
-          id: Number(videoId),
-        },
-      });
-      res.json({
-        ok: true,
-      });
-    } else {
-      res.status(403).json({
-        ok: false,
-        error: "VideoId / UserId Incorrespond",
-      });
-    }
-  }
 }
 
 export default withApiSession(
