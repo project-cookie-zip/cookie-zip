@@ -24,7 +24,7 @@ export default function MyVideoItem({ myVideos }: any): JSX.Element {
           unoptimized={true}
         />
         <STContent>
-          <div>{myVideos?.title}</div>
+          <STTitle>{myVideos?.title}</STTitle>
           <div>
             <span>
               {myVideos?.user?.name} ∙ 조회수 {myVideos?.views} ∙{" "}
@@ -38,7 +38,6 @@ export default function MyVideoItem({ myVideos }: any): JSX.Element {
 }
 
 const STContainer = styled.div`
-  /* border: 1px solid #754423; */
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
     rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   display: flex;
@@ -47,6 +46,8 @@ const STContainer = styled.div`
   height: 310px;
   margin: 0 auto;
   margin-bottom: 40px;
+  transition: 0.3s;
+  box-shadow: ${props => props.theme.boxShadow};
 `;
 
 const STVideoBox = styled.div`
@@ -74,18 +75,16 @@ const STContentBox = styled.div`
   }
 `;
 
-const STChannelName = styled.div`
-  border-radius: 50%;
-  font-size: 16px;
-  text-align: center;
-  line-height: 50px;
-  background-color: #c97f4ebb;
-  width: 50px;
-  height: 50px;
-  margin: 0 10px;
-`;
-
 const STContent = styled.div`
   display: flex;
   flex-direction: column;
+  & span {
+    transition: 0.3s;
+    color: ${props => props.theme.subFontColor};
+  }
+`;
+
+const STTitle = styled.div`
+  transition: 0.3s;
+  color: ${props => props.theme.mainFontColor};
 `;

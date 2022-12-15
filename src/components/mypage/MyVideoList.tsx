@@ -27,4 +27,7 @@ export const MyVideoList = () => {
 const STMyVideoListContainer = styled.div`
   margin-top: 50px;
   margin-bottom: 80px;
+  height: 100%;
+  transition: 0.3s;
+  background-color: ${props => props.theme.backgroundColor};
 `;

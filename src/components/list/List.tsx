@@ -15,7 +15,7 @@ export const List = () => {
     queryFn: getVideos,
   });
 
-  console.log("data", data);
+  // console.log("data", data);
 
   return (
     <STListContainer>
@@ -25,6 +25,9 @@ export const List = () => {
 };
 
 const STListContainer = styled.div`
-  margin-top: 110px;
-  margin-bottom: 80px;
+  padding-top: 130px;
+  padding-bottom: 60px;
+  height: 100%;
+  transition: 0.3s;
+  background-color: ${props => props.theme.backgroundColor};
 `;
