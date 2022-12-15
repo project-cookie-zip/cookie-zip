@@ -4,6 +4,7 @@ import { QueryClient, useMutation } from "react-query";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { commentAPI } from "src/shared/api";
 
 interface ICommentRequest {
   content: string;
@@ -28,15 +29,9 @@ export const CommentModal = ({
     setContent(e.target.value);
   };
   const queryClient = new QueryClient();
-  const api = axios.create({
-    baseURL: "http://localhost:3000/",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
 
   const addWrite = async (req: any) => {
-    const response = await api.post(`/api/comments?id=${id}`, req);
+    const response = await commentAPI.postComment(id, req);
     return response;
   };
 

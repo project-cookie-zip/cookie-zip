@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { myAPI } from "src/shared/api";
 
 export const useLoginCheck = () => {
   const [isLogin, setIsLogin] = useState<boolean>(false);
 
   const loginData = async () => {
-    const response = await axios
-      .get("/api/users/me")
+    const response = await myAPI
+      .getMyData()
       .then(response => {
         setIsLogin(response.data.ok ? true : false);
       })

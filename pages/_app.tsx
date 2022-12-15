@@ -15,7 +15,6 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
-        {/* <ReactQueryDevtools initialIsOpen={true} /> */}
         <Layout>
           {isLoading ? <LoadingSpinner /> : null}
           <Component {...pageProps} />

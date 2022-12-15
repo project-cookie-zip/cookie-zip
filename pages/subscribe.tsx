@@ -6,13 +6,14 @@ import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { baseImageData } from "@utils/client/baseImage";
 import { SubsBtn } from "src/components/videos/video/SubsBtn";
+import { myAPI } from "src/shared/api";
 
 export default function Subscribe() {
   const router = useRouter();
 
   // subscribe data
   const userData = async () => {
-    const data = await axios.get(`/api/users/me`);
+    const data = await myAPI.getMyData();
     return data?.data.subscribeList;
   };
   const { data } = useQuery("myData", userData, {
@@ -116,5 +117,6 @@ const CardUserInfo = styled.div`
   align-items: center;
   & img {
     margin-right: 10px;
+    border-radius: 50px;
   }
 `;
