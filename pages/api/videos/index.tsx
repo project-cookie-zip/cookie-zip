@@ -10,6 +10,7 @@ async function handler(
   if (req.method === "GET") {
     const videos = await client.video.findMany({
       include: {
+        user: true,
         _count: {
           select: {
             likes: true,
