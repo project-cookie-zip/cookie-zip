@@ -1,5 +1,5 @@
-export function TimeToToday(createdAt: Date) {
-  const milliSeconds = new Date() - createdAt;
+export function TimeToToday(createdAt: any) {
+  const milliSeconds = +new Date() - createdAt;
   const seconds = milliSeconds / 1000;
   const minutes = seconds / 60;
   if (minutes < 60)
