@@ -43,8 +43,8 @@ const Container = styled.div`
   align-items: center;
 
   margin: 0 auto;
-  margin-top: 120px;
-  position: absolute;
+  /* margin-top: 120px; */
+  position: relative;
   background-color: #df9e75;
   position: fixed;
   bottom: 0;

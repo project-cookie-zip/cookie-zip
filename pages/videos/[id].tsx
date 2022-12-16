@@ -31,6 +31,12 @@ export default function DetailPost({ videoDatas }: any) {
 
   // user base Image
   const baseImage = baseImageData(videoDatas?.user.id);
+
+  const deleteVideo = async () => {
+    console.log(videoDatas?.id);
+    await axios.delete(`/api/videos/${videoDatas?.id}`);
+  };
+
   return (
     <Container>
       {isLoading ? (
@@ -46,6 +52,7 @@ export default function DetailPost({ videoDatas }: any) {
               <span>조회수 {videoDatas?.views}회</span>
               <span>{TimeToToday(new Date(videoDatas?.createdAt))}</span>
             </SideInfo>
+            <button onClick={deleteVideo}>삭제버튼</button>
           </ContentHeader>
           <UserInfo>
             <UsersData>
@@ -91,6 +98,9 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   max-width: 100vw;
+  transition: 0.3s;
+  background-color: ${props => props.theme.backgroundColor};
+  color: ${props => props.theme.mainFontColor};
 
   animation: addPostFadein 0.3s;
   @keyframes addPostFadein {
@@ -133,7 +143,7 @@ const SideInfo = styled.div`
 
   & span {
     margin: 0 5px 0 5px;
-    color: #929292;
+    color: ${props => props.theme.subFontColor};
   }
 `;
 
@@ -148,13 +158,15 @@ const UsersData = styled.div`
   padding: 10px;
   display: flex;
   align-items: center;
+  color: ${props => props.theme.mainFontColor};
 
   & span {
     margin: 0 5px 0 5px;
     color: #929292;
   }
   & .userName {
-    color: black;
+    transition: 0.3s;
+    color: ${props => props.theme.mainFontColor};
     font-weight: bold;
     font-size: 20px;
   }
@@ -183,8 +195,6 @@ import video from "pages/api/video";
 export const getServerSideProps = async (context: any) => {
   try {
     const { req, query } = context;
-    console.log("hello query", query);
-
     const videos: any = await (
       await fetch(
         `${process.env.LOCAL_BASE_URL}/api/videos/${query.id}`,
