@@ -5,6 +5,7 @@ import { CommentModal } from "./CommentModal";
 import Comment from "./Comment";
 
 export interface IComment {
+  user: any;
   id: number;
   content: string;
 }
@@ -40,6 +41,7 @@ export const Accordion = ({
           <span onClick={closeDetailse}>X</span>
         </CommentsLineTop>
         <p>댓글을 사용할 때는 타인을 존중해주세요</p>
+
         <AddComment>
           <Image
             src={baseImage}
@@ -50,13 +52,16 @@ export const Accordion = ({
           />
           <span onClick={openModal}>댓글 추가 ...</span>
         </AddComment>
-        <CommentModal showModal={showModal} closeModal={closeModal} />
+        <Wrap>
+          <CommentModal showModal={showModal} closeModal={closeModal} />{" "}
+        </Wrap>
 
         {comment?.map((comments: IComment) => (
           <Comment
             key={comments.id}
             comments={comments}
             baseImage={baseImage}
+            userName={comments.user.name}
           />
         ))}
       </CommentsLine>
@@ -69,7 +74,6 @@ const AcodianWrap = styled.div`
   border-bottom: 1px solid #e5e8eb;
   padding: 20px 0;
   width: 95vw;
-
   display: flex;
 `;
 
@@ -139,17 +143,13 @@ const AddComment = styled.div`
     font-size: 14px;
   }
 `;
-const CommentsWrap = styled.div`
+
+const Wrap = styled.div`
   display: flex;
-  padding: 15px;
-  align-items: center;
+  position: relative;
+  z-index: 1;
 `;
-const ContentWrap = styled.div`
-  margin-left: 10px;
-`;
-const Div = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 92%;
-  align-items: center;
-`;
+// const Wrap1 = styled.div`
+//   position: relative;
+//   z-index: 1;
+// `;

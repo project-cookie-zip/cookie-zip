@@ -29,9 +29,18 @@ export const Header = ({ setIsDark }: childProps) => {
           <Image src={require("../../images/cookieLogo.png")} alt="logo" />
         </Link>
       </Logo>
-      <button onClick={darkModeHandler}>다크모드 버튼</button>
       {isLogin ? (
         <TopNav>
+          <span>
+            <input type="checkbox" id="toggle" />
+            <label
+              onClick={darkModeHandler}
+              htmlFor="toggle"
+              className="toggleSwitch"
+            >
+              <span className="toggleButton"></span>
+            </label>
+          </span>
           <Image src={require("../../images/cookieSearch.png")} alt="검색" />
           <Image src={require("../../images/cookieAlert.png")} alt="알림" />
           <Link href={"/mypage"}>
@@ -64,6 +73,7 @@ const Container = styled.div`
   position: fixed;
   min-width: 480px;
   display: flex;
+  z-index: 1;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #a9653b;
@@ -73,10 +83,13 @@ const Logo = styled.div`
   & img {
     width: 100px;
     height: 40px;
+    border-radius: 50px;
   }
 `;
 
 const TopNav = styled.div`
+  display: flex;
+  align-items: center;
   & img {
     width: 30px;
     height: 30px;
@@ -86,6 +99,52 @@ const TopNav = styled.div`
       border-radius: 15px;
       background-color: #e7e7e7;
     }
+  }
+
+  // hide input
+  & input {
+    display: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  & label:focus {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  // toggle
+  & .toggleSwitch {
+    width: 40px;
+    height: 20px;
+    display: block;
+    position: relative;
+    border-radius: 30px;
+    background-color: #fff;
+    box-shadow: 0 0 3px 0px gray;
+    cursor: pointer;
+  }
+
+  .toggleSwitch .toggleButton {
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background: #a9653b;
+  }
+  #toggle:checked ~ .toggleSwitch {
+    background: #a9653b;
+  }
+
+  #toggle:checked ~ .toggleSwitch .toggleButton {
+    left: 21px;
+    background: #fff;
+  }
+
+  // button
+  .toggleSwitch,
+  .toggleButton {
+    transition: all 0.2s ease-in;
   }
 `;
 

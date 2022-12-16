@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import Image from "next/image";
 import { QueryClient, useMutation } from "react-query";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { commentAPI } from "src/shared/api";
 
 interface ICommentRequest {
   content: string;
@@ -13,7 +14,7 @@ export const CommentModal = ({
   showModal,
   closeModal,
 }: {
-  showModal: () => void;
+  showModal: boolean;
   closeModal: () => void;
 }) => {
   const baseImage = `https://source.boringavatars.com/beam/110/$1?colors=DF9E75,A9653B,412513,412510,412500`;
@@ -28,15 +29,9 @@ export const CommentModal = ({
     setContent(e.target.value);
   };
   const queryClient = new QueryClient();
-  const api = axios.create({
-    baseURL: "http://localhost:3000/",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
 
   const addWrite = async (req: any) => {
-    const response = await api.post(`/api/comments?id=${id}`, req);
+    const response = await commentAPI.postComment(id, req);
     return response;
   };
 
@@ -50,8 +45,7 @@ export const CommentModal = ({
     },
   );
 
-  const onClick = () => {
-    setContent("");
+  const OnClickContent = () => {
     mutate(
       { content },
       {
@@ -63,10 +57,12 @@ export const CommentModal = ({
               behavior: "smooth",
             });
           }, 500);
+          closeModal();
         },
         onError: () => {},
       },
     );
+    setContent("");
   };
   return (
     <StyledModalBackground
@@ -88,7 +84,7 @@ export const CommentModal = ({
           />
           <SendCommentBtn>
             <Image
-              onClick={onClick}
+              onClick={OnClickContent}
               src={require("../../../images/cookieSend.png")}
               alt="https://icons8.com/icon/s3wZZp6L8B9s/send Send icon by https://icons8.com"
             />
@@ -122,7 +118,6 @@ const StyledModal = styled.div`
   width: 100vw;
   height: 80px;
   background-color: white;
-
   display: flex;
   justify-content: center;
   align-items: center;

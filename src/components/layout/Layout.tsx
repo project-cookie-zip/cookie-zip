@@ -7,6 +7,8 @@ import Category from "./Category";
 import { useLocalStorage } from "src/hooks/useLocalStorage";
 import { ThemeProvider } from "styled-components";
 import { darkTheme, lightTheme } from "src/theme";
+import { Desktop, Mobile } from "src/hooks/useMideaQuery";
+import { CannotDesktop } from "src/desktop/CannotDesktop";
 
 export const Layout = ({ children }: any) => {
   const { pathname } = useRouter();
@@ -23,21 +25,26 @@ export const Layout = ({ children }: any) => {
 
   return (
     <>
-      {noLayout ? (
-        <LayoutStyle>
-          {children}
-          <Footer />
-        </LayoutStyle>
-      ) : (
-        <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+      <Desktop>
+        <CannotDesktop />
+      </Desktop>
+      <Mobile>
+        {noLayout ? (
           <LayoutStyle>
-            <Header setIsDark={setIsDark} />
-            <Category />
             {children}
             <Footer />
           </LayoutStyle>
-        </ThemeProvider>
-      )}
+        ) : (
+          <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+            <LayoutStyle>
+              <Header setIsDark={setIsDark} />
+              <Category />
+              {children}
+              <Footer />
+            </LayoutStyle>
+          </ThemeProvider>
+        )}
+      </Mobile>
     </>
   );
 };

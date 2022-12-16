@@ -105,7 +105,7 @@ export default function MyPage() {
       return new Promise(resolve => {
         reader.onload = () => {
           setImgSrc(reader.result);
-          resolve();
+          // resolve();
         };
       });
     }
@@ -152,24 +152,17 @@ export default function MyPage() {
       </STModalBackground>
     );
   };
-  //좋아요
-  const [likeMode, setLikeMode] = useState(false);
-  const likeHandler = () => {
-    setLikeMode(!likeMode);
-  };
 
   return (
-    <>
+    <STMypageContainer>
       <STTopBar>
         <STMenu
           onClick={() => {
             router.push("/mypage");
           }}
         >
-          홈
+          MyVideos
         </STMenu>
-        <STMenu onClick={likeHandler}>좋아요</STMenu>
-        <STMenu>채널정보</STMenu>
       </STTopBar>
       <STProfile>
         <STAvatarBox>
@@ -178,7 +171,7 @@ export default function MyPage() {
           ) : (
             <>
               <STProfileImageBox>
-                <STProfileImg
+                <Image
                   src={data?.avatar ? data?.avatar : baseImage}
                   alt="프로필사진"
                   width={60}
@@ -202,10 +195,14 @@ export default function MyPage() {
           <span>구독자 10명 ∙ 동영상 10개</span>
         </div>
       </STProfile>
-      <MyVideoList myInfo={data} />
-    </>
+      <MyVideoList />
+    </STMypageContainer>
   );
 }
+
+const STMypageContainer = styled.div`
+  height: 100vh;
+`;
 
 const STTopBar = styled.div`
   margin-top: 43px;
@@ -218,7 +215,10 @@ const STTopBar = styled.div`
 `;
 
 const STMenu = styled.div`
+  cursor: pointer;
   font-size: 21px;
+  transition: 0.3s;
+  color: ${props => props.theme.mainFontColor};
 `;
 
 const STProfile = styled.div`
@@ -230,6 +230,10 @@ const STProfile = styled.div`
   }
   .nickname {
     font-size: 28px;
+  }
+  & span {
+    transition: 0.3s;
+    color: ${props => props.theme.mainFontColor};
   }
 `;
 
@@ -248,13 +252,15 @@ const STProfileImageBox = styled.div`
   width: 70px;
   height: 70px;
   overflow: hidden;
+  & img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 
-const STProfileImg = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`;
+const STProfileImg = styled.img``;
+
 const STModalBackground = styled.div`
   width: 100vw;
   height: 100vh;
@@ -304,20 +310,3 @@ const STModalContainer = styled.div`
     color: white;
   }
 `;
-
-const STImageBox = styled.div`
-  border: 1px solid red;
-  width: 150px;
-  height: 150px;
-`;
-// const STChannelName = styled.div`
-//   border-radius: 50%;
-//   font-size: 20px;
-//   text-align: center;
-//   line-height: 70px;
-//   background-color: #c97f4ebb;
-//   color: white;
-//   width: 70px;
-//   height: 70px;
-//   margin: 0 10px;
-// `;

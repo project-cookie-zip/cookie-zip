@@ -10,8 +10,7 @@ declare module "iron-session" {
 
 const cookieOptions = {
   cookieName: "cookiezip",
-  password:
-    "a8wda64we4v6aw4gaw68aw9ev4a5w9v15ds6v1ae8d4w6ds1v56aw1bv8ae9rn4ea9n4a56f4e6fe6vas5d1va9rha98e1fafa65d4f",
+  password: `${process.env.NEXT_PUBLIC_COOKIE_PW}`,
 };
 
 export function withApiSession(fn: any) {
