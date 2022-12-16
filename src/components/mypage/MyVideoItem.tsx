@@ -17,10 +17,9 @@ export default function MyVideoItem({ myVideos }: any): JSX.Element {
         <Image
           src={
             myVideos?.user.avatar
-              ? myVideos?.avatar
+              ? myVideos?.user.avatar
               : baseImageData(myVideos.userId)
           }
-          // src={baseImageData(myVideos.userId)}
           alt="프로필사진"
           width={50}
           height={50}
@@ -75,6 +74,7 @@ const STContentBox = styled.div`
   }
   & img {
     margin: 10px;
+    border-radius: 50%;
   }
 `;
 

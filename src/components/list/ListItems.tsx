@@ -16,8 +16,7 @@ export const ListItems = ({ listdata }: any): JSX.Element => {
           </Link>
           <STContentBox>
             <Image
-              // src={el?.user.avatar ? el?.avatar : baseImageData(el.userId)}
-              src={baseImageData(el.userId)}
+              src={el?.user.avatar ? el?.user.avatar : baseImageData(el.userId)}
               alt="프로필사진"
               width={50}
               height={50}
@@ -75,6 +74,7 @@ const STContentBox = styled.div`
   }
   & img {
     margin: 10px;
+    border-radius: 50%;
   }
 `;
 
