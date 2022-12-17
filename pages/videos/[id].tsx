@@ -16,6 +16,7 @@ import { GetServerSideProps } from "next";
 
 //test code
 // data fetch SSP 적용 - videoDatas
+
 export default function DetailPost({ videoDatas }: any) {
   const { query } = useRouter();
 
@@ -23,7 +24,7 @@ export default function DetailPost({ videoDatas }: any) {
   // console.log("구독자수", data?.comments.length);
 
   // user base Image
-  const baseImage = baseImageData(videoDatas?.user?.id);
+  const baseImage: string = baseImageData(videoDatas?.user?.id);
 
   const deleteVideo = async () => {
     Swal.fire({
@@ -232,7 +233,42 @@ export const getServerSideProps: GetServerSideProps = async context => {
   }: any = context;
 
   const video = await client?.video.findUnique({
-    where: { id: Number(id) },
+    where: {
+      id: Number(id),
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          avatar: true,
+        },
+      },
+      comments: {
+        select: {
+          content: true,
+          id: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              avatar: true,
+            },
+          },
+        },
+      },
+      likes: {
+        select: {
+          userId: true,
+        },
+      },
+      _count: {
+        select: {
+          comments: true,
+          likes: true,
+        },
+      },
+    },
   });
   return { props: { videoDatas: JSON.parse(JSON.stringify(video)) } };
 };
