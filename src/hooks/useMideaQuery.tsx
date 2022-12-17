@@ -22,7 +22,7 @@ export const Mobile = () => {
 
   useEffect(() => {
     checkResize();
-    window.addEventListener(`resize`, checkResize);
+    // window.addEventListener(`resize`, checkResize);
   }, [isMobile]);
 
   return mobile;
