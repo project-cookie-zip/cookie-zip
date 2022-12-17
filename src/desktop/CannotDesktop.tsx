@@ -55,6 +55,7 @@ const Background = styled.div`
     margin-top: 15vh;
     background-color: #995931;
     border-radius: 70px;
+    width: 70vw;
   }
 `;
 

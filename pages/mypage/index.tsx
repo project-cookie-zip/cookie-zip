@@ -1,46 +1,38 @@
-import { List } from "src/components/list/List";
 import styled from "styled-components";
-import { useEffect } from "react";
 import axios from "axios";
 import { useQuery, useMutation } from "react-query";
 import { baseImageData } from "@utils/client/baseImage";
 import Image from "next/image";
 import { useState } from "react";
-import Router from "next/router";
 import Swal from "sweetalert2";
 import { MyVideoList } from "src/components/mypage/MyVideoList";
-import Link from "next/link";
 import { useRouter } from "next/router";
+import { myAPI } from "src/shared/api";
 
 export default function MyPage() {
   const router = useRouter();
+
   const getMyInfo = async () => {
-    const { data } = await axios.get(`/api/users/me`);
-    console.log(data);
+    const { data } = await myAPI.getMyData();
     return data?.profile;
   };
 
-  const { data } = useQuery({
-    queryKey: ["getMyInfo"],
-    queryFn: getMyInfo,
+  const { data } = useQuery("getMyInfo", getMyInfo, {
+    refetchOnWindowFocus: false,
   });
-  console.log(data);
 
   const baseImage = baseImageData(data?.id);
 
   //userImage 업로드
 
   const [testSend, setTestSend] = useState("");
-
   const postImage = async () => {
     let formData = new FormData();
     formData.append("file", testSend);
 
     const {
       data: { id, uploadURL },
-    } = await axios.get("/api/image");
-    // console.log("data", data);
-    // console.log(uploadURL, id);
+    } = await myAPI.getMyImage();
 
     const {
       data: {
@@ -48,13 +40,9 @@ export default function MyPage() {
       },
     } = await axios.post(uploadURL, formData);
 
-    await axios.post("/api/users/me", {
-      // email,
+    await myAPI.postMyImage({
       avatar: variants[1],
-      // nickname,
     });
-
-    // setEdit(false);
   };
 
   const imageMutate = useMutation(postImage);
@@ -62,13 +50,10 @@ export default function MyPage() {
   const addImage = async () => {
     imageMutate.mutate();
     closeModal();
-    // Router.push("/mypage");
   };
 
   //정보 수정 모달 창
   const [edit, setEdit] = useState(false);
-
-  console.log(edit);
 
   //클릭하면 모달 창이 열린다.
   const editHandler = (e: any) => {

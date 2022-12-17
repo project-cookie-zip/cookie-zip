@@ -5,7 +5,6 @@ import Image from "next/image";
 import { baseImageData } from "@utils/client/baseImage";
 
 export const ListItems = ({ listdata }: any): JSX.Element => {
-  console.log("listdata", listdata);
   return (
     <>
       {listdata?.map((el: any) => (
@@ -17,8 +16,7 @@ export const ListItems = ({ listdata }: any): JSX.Element => {
           </Link>
           <STContentBox>
             <Image
-              // src={el?.user.avatar ? el?.avatar : baseImageData(el.userId)}
-              src={baseImageData(el.userId)}
+              src={el?.user.avatar ? el?.user.avatar : baseImageData(el.userId)}
               alt="프로필사진"
               width={50}
               height={50}
@@ -40,10 +38,7 @@ export const ListItems = ({ listdata }: any): JSX.Element => {
   );
 };
 
-const STListItemContainer = styled.div``;
-
 const STContainer = styled.div`
-  /* border: 1px solid #754423; */
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
     rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   display: flex;
@@ -79,6 +74,7 @@ const STContentBox = styled.div`
   }
   & img {
     margin: 10px;
+    border-radius: 50%;
   }
 `;
 
