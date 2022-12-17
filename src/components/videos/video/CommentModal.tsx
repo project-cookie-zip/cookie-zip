@@ -17,6 +17,7 @@ export const CommentModal = ({
   closeModal,
   setComments,
 }: {
+  baseImage: any;
   showModal: boolean;
   closeModal: () => void;
   setComments: any;
