@@ -12,6 +12,7 @@ import { baseImageData } from "@utils/client/baseImage";
 import { videoAPI } from "src/shared/api";
 import { useMyData } from "src/hooks/getAPIs/useMyData";
 import { useEffect, useState } from "react";
+import { GetServerSideProps } from "next";
 
 //test code
 // data fetch SSP 적용 - videoDatas
@@ -22,7 +23,7 @@ export default function DetailPost({ videoDatas }: any) {
   // console.log("구독자수", data?.comments.length);
 
   // user base Image
-  const baseImage = baseImageData(videoDatas?.user.id);
+  const baseImage = baseImageData(videoDatas?.user?.id);
 
   const deleteVideo = async () => {
     Swal.fire({
@@ -66,7 +67,7 @@ export default function DetailPost({ videoDatas }: any) {
   const myData = useMyData();
   const [isMe, setIsMe] = useState<boolean>(false);
   useEffect(() => {
-    if (myData?.data.profile.id === videoDatas?.userId) {
+    if (myData?.data?.profile?.id === videoDatas?.userId) {
       setIsMe(true);
     }
   }, [myData, videoDatas]);
@@ -88,7 +89,7 @@ export default function DetailPost({ videoDatas }: any) {
           <Link href={"/"}>
             <Image
               src={
-                videoDatas?.user.avatar ? videoDatas?.user.avatar : baseImage
+                videoDatas?.user?.avatar ? videoDatas?.user?.avatar : baseImage
               }
               alt="프로필사진"
               width={60}
@@ -96,14 +97,14 @@ export default function DetailPost({ videoDatas }: any) {
               unoptimized={true}
             />
           </Link>
-          <span className="userName">{videoDatas?.user.name}</span>
+          <span className="userName">{videoDatas?.user?.name}</span>
           <span>구독자수(10만)</span>
         </UsersData>
-        <SubsBtn createdUserId={videoDatas?.user.id} />
+        <SubsBtn createdUserId={videoDatas?.user?.id} />
       </UserInfo>
       <SideBtnsWrap>
         <LikeBtn
-          likeCount={videoDatas?._count.likes}
+          likeCount={videoDatas?._count?.likes}
           pageQuery={query?.id}
           videoState={videoDatas}
         />
@@ -228,33 +229,13 @@ const ContentWrap = styled.div`
 // SSP -- 데이터 URL은 맞으나 plz login err 발생(post man도 동일)
 // 에러 해결 완료 - headers의 Cookie data로 처리
 
-import fetch from "isomorphic-unfetch";
+export const getServerSideProps: GetServerSideProps = async context => {
+  const {
+    params: { id },
+  }: any = context;
 
-export const getServerSideProps = async (context: any) => {
-  try {
-    const { req, query } = context;
-    const reqHeaders: HeadersInit = new Headers();
-    reqHeaders.set(`Cookie`, `${process.env.GET_API_HEADERS_COOKIE}`);
-    const videos: any = await (
-      await fetch(`${process.env.LOCAL_BASE_URL}/api/videos/${query.id}`, {
-        //   // SSP 작업 시 참고 *
-        //   // 현재 요청 시 plz log in error가 발생하여
-        //   // Cookie 값을 임의로 넣어주고 있습니다.
-        //   Cookie: process.env.GET_API_HEADERS_COOKIE,
-        headers: reqHeaders,
-      })
-    ).json();
-    const videoDatas = videos.video;
-    return {
-      props: { videoDatas },
-    };
-  } catch (error) {
-    const videoDatas = { error: error };
-    console.log(error);
-    return {
-      props: {
-        videoDatas,
-      },
-    };
-  }
+  const video = await client?.video.findUnique({
+    where: { id: Number(id) },
+  });
+  return { props: { videoDatas: JSON.parse(JSON.stringify(video)) } };
 };
