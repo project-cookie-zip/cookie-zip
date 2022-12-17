@@ -22,9 +22,8 @@ export const Mobile = () => {
 
   useEffect(() => {
     checkResize();
+    window.addEventListener(`resize`, checkResize);
   }, [isMobile]);
-
-  window.addEventListener(`resize`, checkResize);
 
   return mobile;
 };
