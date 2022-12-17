@@ -3,6 +3,7 @@ import Image from "next/image";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons/faEllipsisV";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverRounded";
 import { IComment } from "./Accordion";
 import { commentAPI } from "src/shared/api";
 
@@ -57,6 +58,7 @@ const Comment = ({ comments, userName, baseImage }: ICommentProps) => {
       {modalOpen ? (
         <Container modalOpen={modalOpen}>
           <Buttons type="button" onClick={() => deletHandler(comments.id)}>
+            <DeleteForeverOutlinedIcon />
             삭제하기
           </Buttons>
         </Container>
@@ -99,18 +101,22 @@ const Container = styled.div<{ modalOpen: boolean }>`
   background-color: #ffffff;
   border: 2px solid ${props => props.theme.borderColor};
   border-radius: 8px;
-
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   border: none;
 `;
 const Buttons = styled.button`
+  display: flex;
+  border-radius: 8px;
   width: 100%;
   height: 50%;
   font-size: 15px;
   border: none;
+  align-items: center;
 `;
 const Icon = styled(FontAwesomeIcon)<{ $isHover: boolean }>`
   display: ${props => (props.$isHover ? "auto" : "none")};
+  width: 20px;
+  height: 20px;
 `;
 
 const IconContainer = styled.div`
