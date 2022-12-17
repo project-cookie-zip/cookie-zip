@@ -75,6 +75,9 @@ const Container = styled.div`
   & span {
     font-size: 1.3rem;
   }
+  & img {
+    border-radius: 50%;
+  }
 `;
 
 const ImageBox = styled.div`
