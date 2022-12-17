@@ -17,7 +17,6 @@ const Comment = ({ comments, userName, baseImage }: ICommentProps) => {
   // 모달창 노출 여부 state
   const [modalOpen, setModalOpen] = useState(false);
   const [isHover, setIsHover] = useState(false);
-  console.log(comments);
   // 모달창 노출
   const showModal = () => {
     setModalOpen(props => !props);
@@ -27,8 +26,6 @@ const Comment = ({ comments, userName, baseImage }: ICommentProps) => {
     const response = await commentAPI.deleteComment(id);
     return response;
   };
-
-  console.log(modalOpen);
 
   return (
     <Wrapper>
