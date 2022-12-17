@@ -4,20 +4,24 @@ import { QueryClient, useMutation } from "react-query";
 import { AxiosError } from "axios";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { commentAPI } from "src/shared/api";
+import api, { commentAPI } from "src/shared/api";
+import { IComment } from "./Accordion";
 
 interface ICommentRequest {
   content: string;
 }
 
 export const CommentModal = ({
+  baseImage,
   showModal,
   closeModal,
+  setComments,
 }: {
   showModal: boolean;
   closeModal: () => void;
+  setComments: any;
 }) => {
-  const baseImage = `https://source.boringavatars.com/beam/110/$1?colors=DF9E75,A9653B,412513,412510,412500`;
+  baseImage;
   const {
     query: { id },
   } = useRouter();
@@ -30,39 +34,21 @@ export const CommentModal = ({
   };
   const queryClient = new QueryClient();
 
-  const addWrite = async (req: any) => {
-    const response = await commentAPI.postComment(id, req);
-    return response;
-  };
+  const OnClickContent = async () => {
+    const {
+      data: { answer },
+    } = await commentAPI.postComment(id, { content });
 
-  const { mutate } = useMutation<any, AxiosError, ICommentRequest>(
-    req => addWrite(req),
-    {
-      onError: error => console.log(error),
-      onSuccess: () => {
-        queryClient.invalidateQueries(["content"]);
-      },
-    },
-  );
-
-  const OnClickContent = () => {
-    mutate(
-      { content },
-      {
-        onSuccess: () => {
-          setTimeout(() => {
-            window.scrollTo({
-              top: document.body.scrollHeight,
-              left: 100,
-              behavior: "smooth",
-            });
-          }, 500);
-          closeModal();
-        },
-        onError: () => {},
-      },
-    );
-    setContent("");
+    setComments((props: IComment[]) => [...props, answer]);
+    setTimeout(() => {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        left: 100,
+        behavior: "smooth",
+      });
+    }, 500);
+    closeModal();
+    setContent(" ");
   };
   return (
     <StyledModalBackground

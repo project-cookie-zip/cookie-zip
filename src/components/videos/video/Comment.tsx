@@ -4,34 +4,72 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons/faEllipsisV";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverRounded";
+import BuildCircleIcon from "@mui/icons-material/BuildCircle";
 import { IComment } from "./Accordion";
 import { commentAPI } from "src/shared/api";
+import Swal from "sweetalert2";
+import { useMutation, useQueryClient } from "react-query";
+import { AxiosResponse } from "axios";
 
 interface ICommentProps {
-  comments: IComment;
+  comment: IComment;
   userName: string;
+  userImage: string;
   baseImage: string;
+  setComments: any;
 }
 
-const Comment = ({ comments, userName, baseImage }: ICommentProps) => {
+const Comment = ({
+  comment,
+  userName,
+  baseImage,
+  userImage,
+  setComments,
+}: ICommentProps) => {
   // 모달창 노출 여부 state
   const [modalOpen, setModalOpen] = useState(false);
   const [isHover, setIsHover] = useState(false);
+
   // 모달창 노출
   const showModal = () => {
     setModalOpen(props => !props);
   };
 
-  const deletHandler = async (id: any) => {
+  const id: any = comment.id;
+  const deleteComment = async (id: any) => {
     const response = await commentAPI.deleteComment(id);
     return response;
   };
 
+  const queryClient = useQueryClient();
+  const deleteMutation = useMutation(() => deleteComment(id), {
+    onError: error => console.log(error),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["getVideos"]);
+    },
+  });
+
+  const onDelete = async () => {
+    const response: any = await commentAPI
+      .deleteComment(id)
+      .catch(e => Swal.fire("삭제가 안됐습니다"));
+    if (response?.data?.ok) {
+      setComments((props: IComment[]) =>
+        props.filter(comment => comment.id !== id),
+      );
+      return;
+    }
+  };
+
+  const editHandler = () => {
+    Swal.fire("준비중입니다");
+  };
+
   return (
     <Wrapper>
-      <CommentsWrap key={comments.id}>
+      <CommentsWrap key={comment.id}>
         <Image
-          src={baseImage}
+          src={userImage || baseImage}
           alt="프로필사진"
           width={60}
           height={60}
@@ -44,7 +82,7 @@ const Comment = ({ comments, userName, baseImage }: ICommentProps) => {
         >
           <div>
             <NickName>{userName}</NickName>
-            <ContentWrap>{comments.content} </ContentWrap>
+            <ContentWrap>{comment.content} </ContentWrap>
           </div>
 
           <IconContainer onClick={showModal}>
@@ -54,9 +92,13 @@ const Comment = ({ comments, userName, baseImage }: ICommentProps) => {
       </CommentsWrap>
       {modalOpen ? (
         <Container modalOpen={modalOpen}>
-          <Buttons type="button" onClick={() => deletHandler(comments.id)}>
+          <Buttons type="button" onClick={onDelete}>
             <DeleteForeverOutlinedIcon />
             삭제하기
+          </Buttons>
+          <Buttons type="button" onClick={editHandler}>
+            <BuildCircleIcon />
+            수정하기
           </Buttons>
         </Container>
       ) : null}
@@ -109,6 +151,11 @@ const Buttons = styled.button`
   font-size: 15px;
   border: none;
   align-items: center;
+  background-color: transparent;
+  cursor: pointer;
+  &:hover {
+    background-color: #a5a5a5;
+  }
 `;
 const Icon = styled(FontAwesomeIcon)<{ $isHover: boolean }>`
   display: ${props => (props.$isHover ? "auto" : "none")};
