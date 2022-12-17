@@ -226,9 +226,6 @@ const ContentWrap = styled.div`
   width: 95vw;
 `;
 
-// SSP -- 데이터 URL은 맞으나 plz login err 발생(post man도 동일)
-// 에러 해결 완료 - headers의 Cookie data로 처리
-
 export const getServerSideProps: GetServerSideProps = async context => {
   const {
     params: { id },

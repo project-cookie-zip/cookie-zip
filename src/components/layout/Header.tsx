@@ -22,6 +22,7 @@ export const Header = ({ setIsDark }: childProps) => {
       setIsDark(false);
     }
   };
+  // console.log("프로필", data);
   return (
     <Container>
       <Logo>
