@@ -15,7 +15,7 @@ export default function Home() {
       },
     }).then(data => {
       if (data.status === 404) {
-        console.log(data);
+        // console.log(data);
         router.replace("/login");
       } else {
         console.log(data);

@@ -45,7 +45,7 @@ export default function AddPost() {
   const [content, setContent] = useState<string>("");
   // textarea 자동 줄바꿈
   const [textareaHeight, setTextareaHeight] = useState<number>(1);
-  console.log(content);
+  // console.log(content);
   const onKeyEnter = (e: any) => {
     if (e.key === "Enter" && content.length < 130) {
       setContent(content + "\n");
@@ -152,7 +152,7 @@ export default function AddPost() {
       }
     });
   };
-  console.log(nowUploading);
+
   return (
     <FormContainer>
       {nowUploading ? <LoadingSpinner /> : null}

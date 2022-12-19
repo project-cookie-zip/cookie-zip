@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+// 미사용 컴포넌트
 export const SubscribeBtn = () => {
   // subscribe
   const toSubscribe = () => {
