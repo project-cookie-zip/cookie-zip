@@ -19,7 +19,7 @@ export default function SignUp() {
     watch, // 현재 상태 볼 수있음
     formState: { errors },
   } = useForm<IFormInputs>();
-  console.log(errors);
+  // console.log(errors);
 
   const router = useRouter();
 

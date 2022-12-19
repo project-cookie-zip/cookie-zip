@@ -27,7 +27,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <CannotDesktop />
         )}
       </RecoilRoot>
-      <ReactQueryDevtools />
+      {/* <ReactQueryDevtools /> */}
     </QueryClientProvider>
   );
 }
