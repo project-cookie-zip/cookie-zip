@@ -11,19 +11,28 @@ interface IFormInputs {
   nickname: string;
   password: string;
   password2: string;
+  extraError?: string;
 }
 export default function SignUp() {
   const {
     register, // 등록
     handleSubmit, // 제출
     watch, // 현재 상태 볼 수있음
+    setError,
     formState: { errors },
   } = useForm<IFormInputs>();
-  // console.log(errors);
 
   const router = useRouter();
 
   const onSubmit = async (data: IFormInputs) => {
+    // if (data.password !== data.password2) {
+    //   setError(
+    //     "password2",
+    //     { message: "비밀번호가 일치하지 않습니다." },
+    //     { shouldFocus: true },
+    //   );
+    //   console.log(data.password);
+    // }
     const { ok } = await fetch("/api/users/enter", {
       method: "POST",
       body: JSON.stringify(data),
@@ -31,11 +40,11 @@ export default function SignUp() {
         "Content-Type": "application/json",
       },
     });
-
+    console.log(ok);
     if (ok) {
       router.push("/login");
     } else {
-      Swal.fire("뭐래 이자식이");
+      Swal.fire("가입되지 않았습니다");
     }
   };
 
@@ -62,21 +71,79 @@ export default function SignUp() {
         <Div>
           <Text>이메일</Text>
           <Input
-            {...register("email", { required: "이메일을 작성해 주세요" })}
+            {...register("email", {
+              required: true,
+              pattern: {
+                value:
+                  /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/,
+                message: "이메일 형식을 지켜주세요",
+              },
+            })}
           />
-          <span>{errors?.email?.message}</span>
+          <ErrorsMessage>
+            {errors.email?.type === "required" && "이메일을 입력해주세요"}
+            {errors.email?.type === "pattern" && errors.email.message}
+          </ErrorsMessage>
         </Div>
         <Div>
           <Text>닉네임</Text>
-          <Input {...register("nickname")} />
+          <Input
+            {...register("nickname", {
+              required: true,
+              minLength: {
+                value: 10,
+                message: "10자 이내로 작성하세요 ",
+              },
+            })}
+          />
+          <ErrorsMessage>
+            {errors.nickname?.type === "required" && "닉네임을 작성해주세요"}
+            {errors.nickname?.type === "pattern" && errors.nickname.message}
+          </ErrorsMessage>
         </Div>
         <Div>
           <Text>비밀번호</Text>
-          <Input type={passwordType.type} {...register("password")} />
+          <Input
+            type={passwordType.type}
+            {...register("password", {
+              required: true,
+              minLength: {
+                value: 8,
+                message:
+                  "비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.",
+              },
+              pattern: {
+                value:
+                  /(?=.*\d{1,50})(?=.*[~`!@#$%\^&*()-+=]{1,50})(?=.*[a-zA-Z]{2,50}).{8}$/,
+                message:
+                  "비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다 ",
+              },
+            })}
+          />
+          <ErrorsMessage>
+            {errors.password?.type === "required" && "비밀번호를 입력해주세요"}
+            {errors.password?.type === "pattern" && errors.password.message}
+          </ErrorsMessage>
         </Div>
         <Div>
           <Text>비밀번호(확인)</Text>
-          <Input type={passwordType.type} {...register("password2")} />
+          <Input
+            type={passwordType.type}
+            {...register("password2", {
+              required: true,
+              minLength: {
+                value: 8,
+                message:
+                  "비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.",
+              },
+            })}
+          />
+          <ErrorsMessage>
+            {errors.password2?.type === "required" &&
+              "비밀번호를 한번 더 입력해주세요"}
+            {errors.password2?.type === errors.password2?.message}
+          </ErrorsMessage>
+
           <span onClick={handlePasswordType}>
             {passwordType.visible ? <span>숨기기</span> : <span>보이기</span>}
           </span>
@@ -111,6 +178,12 @@ const Sign = styled.h5`
   padding: 20px;
   background-color: #9d6511;
 `;
+
+const ErrorsMessage = styled.p`
+  font-size: 13px;
+  color: #6c5b44;
+`;
+
 const Text = styled.h5`
   margin: 10px 0px;
 `;
