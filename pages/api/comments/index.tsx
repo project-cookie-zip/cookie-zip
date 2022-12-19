@@ -28,9 +28,18 @@ async function handler(
         content,
       },
     });
+
+    const returnAnswer = await client.comment.findUnique({
+      where: {
+        id: newAnswer.id,
+      },
+      include: {
+        user: true,
+      },
+    });
     res.json({
       ok: true,
-      answer: newAnswer,
+      answer: returnAnswer,
     });
   }
 

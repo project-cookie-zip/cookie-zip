@@ -3,26 +3,29 @@ import Image from "next/image";
 import { useState } from "react";
 import { CommentModal } from "./CommentModal";
 import Comment from "./Comment";
+import { myAPI } from "src/shared/api";
 
 export interface IComment {
   user: any;
   id: number;
   content: string;
+  setComments: any;
 }
 
 export const Accordion = ({
-  baseImage,
   videoState,
+  baseImage,
 }: {
-  baseImage: string;
+  baseImage: any;
   videoState: any;
 }) => {
   const closeDetailse = () => {
     const details = document.querySelector("details");
     details?.removeAttribute("open");
   };
-  const comment = videoState?.comments;
-  // add comment modal
+  const commentList = videoState?.comments;
+  const [comments, setComments] = useState<IComment[]>([...commentList]);
+  console.log(comments);
   const [showModal, setShowModal] = useState(false);
 
   const openModal = () => {
@@ -53,15 +56,22 @@ export const Accordion = ({
           <span onClick={openModal}>댓글 추가 ...</span>
         </AddComment>
         <Wrap>
-          <CommentModal showModal={showModal} closeModal={closeModal} />{" "}
+          <CommentModal
+            baseImage={baseImage}
+            showModal={showModal}
+            closeModal={closeModal}
+            setComments={setComments}
+          />
         </Wrap>
 
-        {comment?.map((comments: IComment) => (
+        {comments?.map((comment: IComment) => (
           <Comment
-            key={comments.id}
-            comments={comments}
+            key={comment.id}
+            comment={comment}
             baseImage={baseImage}
-            userName={comments.user.name}
+            userImage={comment.user?.avatar}
+            userName={comment.user?.name}
+            setComments={setComments}
           />
         ))}
       </CommentsLine>
