@@ -11,7 +11,6 @@ interface IFormInputs {
   nickname: string;
   password: string;
   password2: string;
-  extraError?: string;
 }
 export default function SignUp() {
   const {
@@ -21,18 +20,21 @@ export default function SignUp() {
     setError,
     formState: { errors },
   } = useForm<IFormInputs>();
+  // console.log(errors);
 
   const router = useRouter();
 
+  const getValues = (data: IFormInputs) => {
+    if (data?.password !== data?.password2) {
+      setError(
+        "password2",
+        { message: "비밀번호가 일치하지 않습니다." },
+        { shouldFocus: true },
+      );
+      console.log(data.password);
+    }
+  };
   const onSubmit = async (data: IFormInputs) => {
-    // if (data.password !== data.password2) {
-    //   setError(
-    //     "password2",
-    //     { message: "비밀번호가 일치하지 않습니다." },
-    //     { shouldFocus: true },
-    //   );
-    //   console.log(data.password);
-    // }
     const { ok } = await fetch("/api/users/enter", {
       method: "POST",
       body: JSON.stringify(data),
@@ -40,11 +42,11 @@ export default function SignUp() {
         "Content-Type": "application/json",
       },
     });
-    console.log(ok);
+
     if (ok) {
       router.push("/login");
     } else {
-      Swal.fire("가입되지 않았습니다");
+      Swal.fire("중복된 아이디입니다");
     }
   };
 
@@ -89,8 +91,8 @@ export default function SignUp() {
           <Text>닉네임</Text>
           <Input
             {...register("nickname", {
-              required: true,
-              minLength: {
+              required: "닉네임을 작성해주세요",
+              maxLength: {
                 value: 10,
                 message: "10자 이내로 작성하세요 ",
               },
@@ -98,7 +100,7 @@ export default function SignUp() {
           />
           <ErrorsMessage>
             {errors.nickname?.type === "required" && "닉네임을 작성해주세요"}
-            {errors.nickname?.type === "pattern" && errors.nickname.message}
+            {errors.nickname?.type === "maxLength" && errors.nickname.message}
           </ErrorsMessage>
         </Div>
         <Div>
@@ -122,7 +124,9 @@ export default function SignUp() {
           />
           <ErrorsMessage>
             {errors.password?.type === "required" && "비밀번호를 입력해주세요"}
-            {errors.password?.type === "pattern" && errors.password.message}
+            {errors.password?.type === "minLength" &&
+              "pattern" &&
+              errors.password.message}
           </ErrorsMessage>
         </Div>
         <Div>
@@ -131,17 +135,17 @@ export default function SignUp() {
             type={passwordType.type}
             {...register("password2", {
               required: true,
-              minLength: {
-                value: 8,
-                message:
-                  "비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.",
+              validate: (val: string) => {
+                if (watch("password") != val) {
+                  return "비밀번호가 일치하지 않습니다.";
+                }
               },
             })}
           />
           <ErrorsMessage>
             {errors.password2?.type === "required" &&
               "비밀번호를 한번 더 입력해주세요"}
-            {errors.password2?.type === errors.password2?.message}
+            {errors.password2?.message}
           </ErrorsMessage>
 
           <span onClick={handlePasswordType}>
@@ -173,15 +177,6 @@ const Input = styled.input`
   border-color: #bf832a;
   border-radius: 5px;
   outline: none;
-`;
-const Sign = styled.h5`
-  padding: 20px;
-  background-color: #9d6511;
-`;
-
-const ErrorsMessage = styled.p`
-  font-size: 13px;
-  color: #6c5b44;
 `;
 
 const Text = styled.h5`
@@ -242,4 +237,8 @@ const ButtonText = styled.p`
     font-family: "Work Sans", sans-serif;
     font-size: 16px;
   }
+`;
+const ErrorsMessage = styled.p`
+  font-size: 13px;
+  color: #6c5b44;
 `;

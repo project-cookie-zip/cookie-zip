@@ -17,17 +17,18 @@ export default function Login() {
   } = useForm<ILoginInputs>();
   const router = useRouter();
   const onSubmit = async (data: ILoginInputs) => {
-    const { ok } = await fetch("/api/users/login", {
+    const res = await fetch("/api/users/login", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },
     });
-    if (ok) {
+    console.log(res);
+    if (res.ok) {
       router.push("/");
     } else {
-      Swal.fire("실패ㅗ");
+      Swal.fire("아이디 또는 패스워드를 확인해주세요!");
     }
   };
 
@@ -40,12 +41,33 @@ export default function Login() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Div>
           <Text>이메일</Text>
-          <Input {...register("email")} />
+          <Input
+            {...register("email", {
+              required: true,
+              pattern: {
+                value:
+                  /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/,
+                message: "이메일 형식을 지켜주세요",
+              },
+            })}
+          />
+          <ErrorsMessage>
+            {errors.email?.type === "required" && "이메일을 입력해주세요"}
+            {errors.email?.type === "pattern" && errors.email.message}
+          </ErrorsMessage>
         </Div>
 
         <Div>
           <Text>비밀번호</Text>
-          <Input type="password" {...register("password")} />
+          <Input
+            type="password"
+            {...register("password", {
+              required: true,
+            })}
+          />
+          <ErrorsMessage>
+            {errors.password?.type === "required" && "비밀번호를 입력해주세요"}
+          </ErrorsMessage>
         </Div>
 
         <ButtonDiv>
@@ -139,4 +161,8 @@ const ButtonText = styled.p`
       color: #818181;
     }
   }
+`;
+const ErrorsMessage = styled.p`
+  font-size: 13px;
+  color: #6c5b44;
 `;
