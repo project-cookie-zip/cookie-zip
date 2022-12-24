@@ -33,7 +33,6 @@ export const CommentModal = ({
   ) => {
     setContent(e.target.value);
   };
-  const queryClient = new QueryClient();
 
   const OnClickContent = async () => {
     const {
@@ -47,9 +46,9 @@ export const CommentModal = ({
         left: 100,
         behavior: "smooth",
       });
-    }, 500);
+    });
+    setContent("");
     closeModal();
-    setContent(" ");
   };
   return (
     <StyledModalBackground
@@ -67,6 +66,7 @@ export const CommentModal = ({
           />
           <textarea
             onChange={onChangeContentHandler}
+            value={content}
             placeholder="댓글추가 ..."
           />
           <SendCommentBtn>

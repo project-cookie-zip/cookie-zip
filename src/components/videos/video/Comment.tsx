@@ -8,8 +8,7 @@ import BuildCircleIcon from "@mui/icons-material/BuildCircle";
 import { IComment } from "./Accordion";
 import { commentAPI } from "src/shared/api";
 import Swal from "sweetalert2";
-import { useMutation, useQueryClient } from "react-query";
-import { AxiosResponse } from "axios";
+import { useMyData } from "src/hooks/getAPIs/useMyData";
 
 interface ICommentProps {
   comment: IComment;
@@ -36,18 +35,6 @@ const Comment = ({
   };
 
   const id: any = comment.id;
-  const deleteComment = async (id: any) => {
-    const response = await commentAPI.deleteComment(id);
-    return response;
-  };
-
-  const queryClient = useQueryClient();
-  const deleteMutation = useMutation(() => deleteComment(id), {
-    onError: error => console.log(error),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["getVideos"]);
-    },
-  });
 
   const onDelete = async () => {
     const response: any = await commentAPI
@@ -64,6 +51,9 @@ const Comment = ({
   const editHandler = () => {
     Swal.fire("준비중입니다");
   };
+
+  const { data } = useMyData();
+  const myId = data?.profile.id;
 
   return (
     <Wrapper>
@@ -84,10 +74,11 @@ const Comment = ({
             <NickName>{userName}</NickName>
             <ContentWrap>{comment.content} </ContentWrap>
           </div>
-
-          <IconContainer onClick={showModal}>
-            <Icon $isHover={isHover} icon={faEllipsisV} />
-          </IconContainer>
+          {myId === comment.user.id && (
+            <IconContainer onClick={showModal}>
+              <Icon $isHover={isHover} icon={faEllipsisV} />
+            </IconContainer>
+          )}
         </Div>
       </CommentsWrap>
       {modalOpen ? (
