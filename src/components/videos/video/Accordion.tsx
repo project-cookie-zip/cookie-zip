@@ -25,7 +25,7 @@ export const Accordion = ({
   };
   const commentList = videoState?.comments;
   const [comments, setComments] = useState<IComment[]>([...commentList]);
-  // console.log(comments);
+
   const [showModal, setShowModal] = useState(false);
 
   const openModal = () => {
